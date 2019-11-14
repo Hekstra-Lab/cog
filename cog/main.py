@@ -1,5 +1,3 @@
-#!/usr/bin/env python3
-
 import argparse
 from cog import softlimits
 
@@ -7,7 +5,9 @@ def main():
 
     # Top-level parser
     parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(title="Precognition data reduction stages")
+    subparsers = parser.add_subparsers(title="Precognition data reduction stages",
+                                       dest="cmd",
+                                       required=True)
 
     # Parser for softlimits
     parser_softlimits = subparsers.add_parser("softlimits",
