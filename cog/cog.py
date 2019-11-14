@@ -1,5 +1,5 @@
 import argparse
-
+from softlimits import softlimits
 
 def main():
 
@@ -11,7 +11,8 @@ def main():
     parser_softlimits = subparsers.add_parser("softlimits",
                                               help="Determine soft limits for data analysis")
     parser_softlimits.add_argument("-i", "--image", help="image to use for determining soft limits")
-
+    parser_softlimits.set_defaults(func=softlimits)
+    
     # Parse commandline arguments
     parser.parse_args()
     
