@@ -1,1 +1,1 @@
-from softlimits import softlimits
+from .softlimits import softlimits
