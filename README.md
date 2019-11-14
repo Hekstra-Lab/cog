@@ -1,2 +1,2 @@
 # cog
-We are not yet postcog... but this is at least better than precog.
+We are not yet `postcog`... but this is at least better than `precog`.
