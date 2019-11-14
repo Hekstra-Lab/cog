@@ -16,6 +16,7 @@ def main():
     parser_softlimits.add_argument("-c", "--cell", help="Cell parameters for crystal",
                                    metavar=("a", "b", "c", "alpha", "beta", "gamma"),
                                    nargs=6, type=float)
+    parser_softlimits.add_argument("--spacegroup", help="Space group number", type=int)
     parser_softlimits.add_argument("-d", "--distance", help="Detector distance in mm",
                                    type=float)
     parser_softlimits.add_argument("--center", help="Coordinates of beam center in pixels",
@@ -26,7 +27,9 @@ def main():
     parser_softlimits.add_argument("-s", "--spot_profile", help="Parameters to be used for spot recognition",
                                    metavar=("length", "width", "sigma_cut"),
                                    nargs=3, type=float)
-    parser_softlimits.add_argument("-o", "--outfile", help="File to which spot locations should be written")
+    parser_softlimits.add_argument("--inpfile", help="File to which Precognition input will be written")
+    parser_softlimits.add_argument("-l", "--logfile", help="File to which Precognition log will be written")    
+    parser_softlimits.add_argument("-o", "--outfile", help="File to which spot locations will be written")
     parser_softlimits.set_defaults(cmd=softlimits)
     
     # Parse commandline arguments and call subcommand
