@@ -12,4 +12,5 @@ setup(
         'console_scripts': [
             'cog=cog.main:main'
         ]
+    }
 )
