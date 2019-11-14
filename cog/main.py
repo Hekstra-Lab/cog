@@ -23,13 +23,16 @@ def main():
                                    metavar=("center_x", "center_y"),
                                    nargs=2, type=float)
     parser_softlimits.add_argument("-r", "--resolution", help="High-resolution limit in angstroms",
-                                   type=float)
+                                   type=float, default=2.0)
     parser_softlimits.add_argument("-s", "--spot_profile", help="Parameters to be used for spot recognition",
                                    metavar=("length", "width", "sigma_cut"),
-                                   nargs=3, type=float)
-    parser_softlimits.add_argument("--inpfile", help="File to which Precognition input will be written")
-    parser_softlimits.add_argument("-l", "--logfile", help="File to which Precognition log will be written")    
-    parser_softlimits.add_argument("-o", "--outfile", help="File to which spot locations will be written")
+                                   nargs=3, type=float, default=[10, 5, 2.0])
+    parser_softlimits.add_argument("--inpfile", help="File to which Precognition input will be written",
+                                   default="limits.inp")
+    parser_softlimits.add_argument("-l", "--logfile", help="File to which Precognition log will be written",
+                                   default="limits.log")    
+    parser_softlimits.add_argument("-o", "--outfile", help="File to which spot locations will be written",
+                                   default="spots.spt")
     parser_softlimits.set_defaults(cmd=softlimits)
     
     # Parse commandline arguments and call subcommand
