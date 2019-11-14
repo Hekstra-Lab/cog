@@ -47,7 +47,7 @@ def softlimits(image=None, cell=None, spacegroup=None, distance=None,
                f"Input\n"
                f"   Crystal    {cellformatted} {spacegroup}\n"
                f"   Distance   {distance:.3f}\n"
-               f"   Center     {center[0]:.3f} {center[1].3f}\n"
+               f"   Center     {center[0]:.3f} {center[1]:.3f}\n"
                f"   Pixel      0.0886 0.0886\n"
                f"   Omega      0 0\n"
                f"   Goniometer 0 0 0\n"
