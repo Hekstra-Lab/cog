@@ -27,12 +27,12 @@ def main():
                                    metavar=("length", "width", "sigma_cut"),
                                    nargs=3, type=float)
     parser_softlimits.add_argument("-o", "--outfile", help="File to which spot locations should be written")
-    parser_softlimits.set_defaults(func=softlimits)
+    parser_softlimits.set_defaults(cmd=softlimits)
     
     # Parse commandline arguments and call subcommand
     args = vars(parser.parse_args())
-    func = args.pop("func")
-    func(**args)
+    cmd = args.pop("cmd")
+    cmd(**args)
     
 if __name__ == "__main__":
     main()
