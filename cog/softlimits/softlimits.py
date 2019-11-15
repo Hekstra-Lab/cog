@@ -1,4 +1,5 @@
 import os
+from cog.core.precognition import run
 
 def softlimits(image=None, cell=None, spacegroup=None, distance=None,
                center=None, resolution=2.0, spot_profile=(10, 5, 2.0),
@@ -64,4 +65,6 @@ def softlimits(image=None, cell=None, spacegroup=None, distance=None,
     with open(inpfile, "w") as inp:
         inp.write(inptext)
 
+    run(inpfile, logfile)
+        
     return
