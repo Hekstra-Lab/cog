@@ -1,4 +1,4 @@
-from os.path import isdir, abspath, dirname
+from os.path import isdir, abspath, dirname, join
 import pandas as pd
 import pickle
 
@@ -122,7 +122,34 @@ class DataSet():
                   inplace=True)
         df.reset_index(inplace=True, drop=True)
         df.loc[df["delay"] == "-", "delay"] = "off"
-
+        df.set_index("file", inplace=True)
+        
         return cls(images=df, pathToImages=pathToImages, distance=dist,
                    center=center)
             
+    def softlimits(self, image, resolution=2.0, spot_profile=(10, 5, 2.0)):
+        """
+        Determine the soft limits for data analysis in Precognition. 
+
+        Parameters
+        ----------
+        image : str
+            Filename of image to select from DataSet.images DataFrame
+        resolution : float
+            High-resolution limit in angstroms
+        spot_profile : tuple(length, width, sigma-cut)
+            Parameters to be used for spot recognition
+        """
+        from cog.commands import softlimits
+
+        try:
+            _ = self.images.loc[image]
+            imagepath = join(self.pathToImages, image)
+        except KeyError:
+            raise KeyError(f"{image} was not found in image DataFrame")
+        
+        softlimits(image, self.getCell(), self.sg, self.distance,
+                   self.center, resolution, spot_profile)
+
+        return
+        
