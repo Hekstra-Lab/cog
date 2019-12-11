@@ -148,7 +148,7 @@ class DataSet():
         except KeyError:
             raise KeyError(f"{image} was not found in image DataFrame")
         
-        softlimits(image, self.getCell(), self.sg, self.distance,
+        softlimits(imagepath, self.getCell(), self.sg, self.distance,
                    self.center, resolution, spot_profile)
 
         return
