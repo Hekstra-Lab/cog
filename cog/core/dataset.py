@@ -1,4 +1,4 @@
-from os.path import isdir, abspath
+from os.path import isdir, abspath, dirname
 import pandas as pd
 import pickle
 
@@ -98,7 +98,7 @@ class DataSet():
         """
         dists = []
         dfs   = []
-        pathToImages = abspath(logs[0])
+        pathToImages = abspath(dirname(logs[0]))
         for log in logs:
             with open(log, "r") as f:
                 lines18 = [ f.readline() for i in range(18) ]
