@@ -26,22 +26,24 @@ class DataSet():
         self.distance = distance
 
         # Beam center (pixelX, pixelY)
-        if not isinstance(center, tuple):
+        if center and not isinstance(center, tuple):
             raise ValueError("Beam center must be a tuple of floats")
         else:
             self.center = center
 
         # Pixel size in (mm, mm)
-        if not isinstance(pixelSize, tuple):
+        if pixelSize and not isinstance(pixelSize, tuple):
             raise ValueError("Pixel size must be a tuple of floats")
         else:
             self.pixelSize = pixelSize
 
         # Cell parameters for crystal
-        if not isinstance(cell, tuple) or len(cell) != 6:
+        if cell and (not isinstance(cell, tuple) or len(cell) != 6):
             raise ValueError("Cell must be specified as (a, b, c, alpha, beta, gamma)")
+        elif cell:
+            self.setCell(*cell)
         else:
-            setCell(self, *cell)
+            self.setCell(*[None]*6)
 
         # Space group for crystal
         self.sg = sg
@@ -68,7 +70,7 @@ class DataSet():
         -------
         int : Number of images
         """
-        return len(data.images)
+        return len(self.images)
         
     def toPickle(self, pklfile="DataSet.pkl"):
         with open(pklfile, 'wb') as pkl:
