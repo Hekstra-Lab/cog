@@ -1,5 +1,5 @@
 import argparse
-from cog import softlimits
+from cog.commands import softlimits
 
 def main():
 
