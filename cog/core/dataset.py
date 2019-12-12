@@ -152,4 +152,31 @@ class DataSet():
                    self.center, resolution, spot_profile)
 
         return
+
+    def index(self, image, resolution=2.0, spot_profile=(10, 5, 2.0)):
+        """
+        Index image using Precognition
+
+        Parameters
+        ----------
+        image : str
+            Filename of image to select from DataSet.images DataFrame
+        resolution : float
+            High-resolution limit in angstroms
+        spot_profile : tuple(length, width, sigma-cut)
+            Parameters to be used for spot recognition
+        """
+        from cog.commands import index
+
+        try:
+            entry = self.images.loc[image]
+            phi = entry['phi']
+            imagepath = join(self.pathToImages, image)
+        except KeyError:
+            raise KeyError(f"{image} was not found in image DataFrame")
         
+        index(imagepath, self.getCell(), self.sg, self.distance,
+              self.center, phi, resolution, spot_profile)
+
+        return
+
