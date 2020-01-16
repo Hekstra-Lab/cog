@@ -69,5 +69,32 @@ def index(image, cell=None, spacegroup=None, distance=None, center=None,
         inp.write(inptext)
 
     run(inpfile, logfile)
+    returncode = checkStatus(logfile)
 
-    return
+    return returncode
+
+def checkStatus(logfile):
+    """
+    Return whether indexing has succeeded or failed.
+
+    Parameters
+    ----------
+    logfile : str
+        Filename of logfile from Precognition indexing
+
+    Returns
+    -------
+    returncode : int
+        0 for success; 1 for failure
+    """
+    # Check if indexed geometry has been written
+    if not os.path.exists(f"pre.spt.inp"):
+        return 1
+
+    # Check for error statement in logfile
+    with open(logfile, "r") as log:
+        lines = log.readlines()
+    if [ True for l in lines if "Index: Auto-indexing failed!" in l ]:
+        return 1
+
+    return 0
