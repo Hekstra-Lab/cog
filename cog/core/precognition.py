@@ -18,8 +18,10 @@ def run(inpfile, logfile):
 
     # Commands
     setenv = f"source {precognition}/setup_precognition_env.sh"
+    cplic  = f"cp $RRILICENSE ."
+    setlic = f"export RRILICENSE=./Harvard.Odyssey2019.license"
     precog = f"Precognition_T5.2.2_x86_64 {inpfile} > {logfile}"
-    cmd = f"{setenv}; {precog}"
+    cmd = f"{setenv}; {cplic}; {setlic}; {precog}"
 
     # Run command
     subprocess.call(cmd, shell=True)
