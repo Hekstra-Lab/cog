@@ -220,7 +220,7 @@ class FrameGeometry():
             elif key == "Goniometer":
                 self.goniometer = values
             elif key == "Format":
-                self.imageformat = values
+                self.imageformat = values[0]
             elif key == "Distance":
                 self.distance = values
             elif key == "Center":
