@@ -1,4 +1,5 @@
 import os
+from cog import FrameGeometry
 from cog.core.precognition import run
 
 def index(image, cell=None, spacegroup=None, distance=None, center=None,
@@ -6,8 +7,8 @@ def index(image, cell=None, spacegroup=None, distance=None, center=None,
           inpfile="index.inp", logfile="index.log",
           outfile="spots.spt"):
     """
-    Determine soft limits for data analsysis using Precognition's spot 
-    profile and resolution estimates
+    Index image using Precognition to determine orientation of crystal
+    during diffraction experiment.
 
     Parameters
     ----------
@@ -34,6 +35,13 @@ def index(image, cell=None, spacegroup=None, distance=None, center=None,
         File to which Precognition log will be written
     outfile : filename
         File to which spot locations will be written
+
+    Returns
+    -------
+    returncode : int
+        0 for success; 1 for failure    
+    geometry : cog.FrameGeometry
+        Indexed experimental geometry for image (None if failed)
     """
     # Check arguments
     if not os.path.exists(image):
@@ -69,9 +77,7 @@ def index(image, cell=None, spacegroup=None, distance=None, center=None,
         inp.write(inptext)
 
     run(inpfile, logfile)
-    returncode = checkStatus(logfile)
-
-    return returncode
+    return checkStatus(logfile)
 
 def checkStatus(logfile):
     """
@@ -86,15 +92,17 @@ def checkStatus(logfile):
     -------
     returncode : int
         0 for success; 1 for failure
+    geometry : cog.FrameGeometry
+        Indexed experimental geometry for image (None if failed)
     """
     # Check if indexed geometry has been written
     if not os.path.exists(f"pre.spt.inp"):
-        return 1
+        return 1, None
 
     # Check for error statement in logfile
     with open(logfile, "r") as log:
         lines = log.readlines()
     if [ True for l in lines if "Index: Auto-indexing failed!" in l ]:
-        return 1
-
-    return 0
+        return 1, None
+    
+    return 0, FrameGeometry("pre.spt.inp")
