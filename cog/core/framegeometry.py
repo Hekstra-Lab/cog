@@ -9,6 +9,8 @@ class FrameGeometry():
     """
 
     def __init__(self, inpfile):
+        self.goniometer = None
+        self.image = None
         self.readINPFile(inpfile)
 
     @property
@@ -172,7 +174,7 @@ class FrameGeometry():
     def wavelength(self, values):
         self.__wavelength = values
         return
-    
+
     def readINPFile(self, inpfile):
         """
         Read Precognition .inp file and update geometric attributes
@@ -257,7 +259,7 @@ class FrameGeometry():
         line_crystal    = " ".join(map(str, self.crystal))
         line_matrix     = " ".join(self.matrix)
         line_omega      = " ".join(self.omega)
-        line_goniometer = " ".join(self.goniometer)
+
         line_distance   = " ".join(self.distance)
         line_center     = " ".join(self.center)
         line_pixel      = " ".join(self.pixel)
@@ -266,24 +268,46 @@ class FrameGeometry():
         line_bulge      = " ".join(self.bulge)
         line_resolution = " ".join(self.resolution)
         line_wavelength = " ".join(self.wavelength)
-        inp = (f"Input\n"
-               f"   Crystal    {line_crystal} {self.spacegroup}\n"
-               f"   Matrix     {line_matrix}\n"
-               f"   Omega      {line_omega}\n"
-               f"   Goniometer {line_goniometer}\n\n"
-               f"   Format     {self.imageformat}\n"
-               f"   Distance   {line_distance}\n"
-               f"   Center     {line_center}\n"
-               f"   Pixel      {line_pixel}\n"
-               f"   Swing      {line_swing}\n"
-               f"   Tilt       {line_tilt}\n"
-               f"   Bulge      {line_bulge}\n\n"
-               f"   Image {self.image[0]}    {self.image[1]}\n"
-               f"   Resolution {line_resolution}\n"
-               f"   Wavelength {line_wavelength}\n"
-               f"   Quit\n"
-        )
-               
+
+        if self.goniometer:
+            line_goniometer = " ".join(self.goniometer)
+            
+            inp = (f"Input\n"
+                   f"   Crystal    {line_crystal} {self.spacegroup}\n"
+                   f"   Matrix     {line_matrix}\n"
+                   f"   Omega      {line_omega}\n"
+                   f"   Goniometer {line_goniometer}\n\n"
+                   f"   Format     {self.imageformat}\n"
+                   f"   Distance   {line_distance}\n"
+                   f"   Center     {line_center}\n"
+                   f"   Pixel      {line_pixel}\n"
+                   f"   Swing      {line_swing}\n"
+                   f"   Tilt       {line_tilt}\n"
+                   f"   Bulge      {line_bulge}\n\n"
+                   f"   Image {self.image[0]}    {self.image[1]}\n"
+                   f"   Resolution {line_resolution}\n"
+                   f"   Wavelength {line_wavelength}\n"
+                   f"   Quit\n"
+            )
+
+        else:
+
+            inp = (f"Input\n"
+                   f"   Crystal    {line_crystal} {self.spacegroup}\n"
+                   f"   Matrix     {line_matrix}\n"
+                   f"   Omega      {line_omega}\n"
+                   f"   Format     {self.imageformat}\n"
+                   f"   Distance   {line_distance}\n"
+                   f"   Center     {line_center}\n"
+                   f"   Pixel      {line_pixel}\n"
+                   f"   Swing      {line_swing}\n"
+                   f"   Tilt       {line_tilt}\n"
+                   f"   Bulge      {line_bulge}\n\n"
+                   f"   Resolution {line_resolution}\n"
+                   f"   Wavelength {line_wavelength}\n"
+                   f"   Quit\n"
+            )
+
         with open(inpfile, "w") as outfile:
             outfile.write(inp)
 
