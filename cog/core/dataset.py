@@ -175,8 +175,12 @@ class DataSet():
         except KeyError:
             raise KeyError(f"{image} was not found in image DataFrame")
         
-        index(imagepath, self.getCell(), self.sg, self.distance,
-              self.center, phi, resolution, spot_profile)
+        code, geom = index(imagepath, self.getCell(), self.sg,
+                           self.distance, self.center, phi, resolution,
+                           spot_profile)
+
+        if not code:
+            self.images.loc[image, "geometry"] = geom
 
         return
 
