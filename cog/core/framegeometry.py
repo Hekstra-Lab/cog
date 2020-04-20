@@ -69,7 +69,7 @@ class FrameGeometry():
     def omega(self):
         return self.__omega
 
-    @spacegroup.setter
+    @omega.setter
     def omega(self, values):
         self.__omega = values
         return
@@ -254,21 +254,33 @@ class FrameGeometry():
             Path to .inp file to which to write
         """
 
+        line_crystal    = " ".join(map(str, self.crystal))
+        line_matrix     = " ".join(self.matrix)
+        line_omega      = " ".join(self.omega)
+        line_goniometer = " ".join(self.goniometer)
+        line_distance   = " ".join(self.distance)
+        line_center     = " ".join(self.center)
+        line_pixel      = " ".join(self.pixel)
+        line_swing      = " ".join(self.swing)
+        line_tilt       = " ".join(self.tilt)
+        line_bulge      = " ".join(self.bulge)
+        line_resolution = " ".join(self.resolution)
+        line_wavelength = " ".join(self.wavelength)
         inp = (f"Input\n"
-               f"   Crystal    65.155 39.450 38.944 89.974 117.549 90.139 1\n"
-               f"   Matrix     0.554922 -0.072795 -0.828711 0.830204 0.112074 0.546077 0.053125 -0.991030 0.122627\n"
-               f"   Omega      0.000 0.000\n"
-               f"   Goniometer 0.000 0.000 0.000\n"
-               f"   Format     RayonixMX340\n"
-               f"   Distance   200.200 0.250\n"
-               f"   Center     1985.26 1967.32 0.10 0.10\n"
-               f"   Pixel      0.088542 0.088600 0.000010 0.000000\n"
-               f"   Swing      0.000 0.000 0.000 0.000\n"
-               f"   Tilt       -0.074140 -0.197053 0.040000 0.040000\n"
-               f"   Bulge      0.000000000000 0.000000000000 0.000000000000 0.000000000000\n"
-               f"   Image 0    e35d_200ns_005.mccd\n"
-               f"   Resolution 2.00 100.00\n"
-               f"   Wavelength 1.02 1.16\n"
+               f"   Crystal    {line_crystal} {self.spacegroup}\n"
+               f"   Matrix     {line_matrix}\n"
+               f"   Omega      {line_omega}\n"
+               f"   Goniometer {line_goniometer}\n\n"
+               f"   Format     {self.imageformat}\n"
+               f"   Distance   {line_distance}\n"
+               f"   Center     {line_center}\n"
+               f"   Pixel      {line_pixel}\n"
+               f"   Swing      {line_swing}\n"
+               f"   Tilt       {line_tilt}\n"
+               f"   Bulge      {line_bulge}\n\n"
+               f"   Image {self.image[0]}    {self.image[1]}\n"
+               f"   Resolution {line_resolution}\n"
+               f"   Wavelength {line_wavelength}\n"
                f"   Quit\n"
         )
                
