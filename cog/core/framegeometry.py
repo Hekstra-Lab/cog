@@ -15,6 +15,30 @@ class FrameGeometry():
     def crystal(self):
         return self.__crystal
 
+    @property
+    def a(self):
+        return self.__crystal[0]
+
+    @property
+    def b(self):
+        return self.__crystal[1]
+
+    @property
+    def c(self):
+        return self.__crystal[2]
+
+    @property
+    def alpha(self):
+        return self.__crystal[3]
+
+    @property
+    def beta(self):
+        return self.__crystal[4]
+
+    @property
+    def gamma(self):
+        return self.__crystal[5]
+    
     @crystal.setter
     def crystal(self, values):
         if len(values) != 6:
@@ -229,4 +253,27 @@ class FrameGeometry():
         inpfile : str
             Path to .inp file to which to write
         """
-        
+
+        inp = (f"Input\n"
+               f"   Crystal    65.155 39.450 38.944 89.974 117.549 90.139 1\n"
+               f"   Matrix     0.554922 -0.072795 -0.828711 0.830204 0.112074 0.546077 0.053125 -0.991030 0.122627\n"
+               f"   Omega      0.000 0.000\n"
+               f"   Goniometer 0.000 0.000 0.000\n"
+               f"   Format     RayonixMX340\n"
+               f"   Distance   200.200 0.250\n"
+               f"   Center     1985.26 1967.32 0.10 0.10\n"
+               f"   Pixel      0.088542 0.088600 0.000010 0.000000\n"
+               f"   Swing      0.000 0.000 0.000 0.000\n"
+               f"   Tilt       -0.074140 -0.197053 0.040000 0.040000\n"
+               f"   Bulge      0.000000000000 0.000000000000 0.000000000000 0.000000000000\n"
+               f"   Image 0    e35d_200ns_005.mccd\n"
+               f"   Resolution 2.00 100.00\n"
+               f"   Wavelength 1.02 1.16\n"
+               f"   Quit\n"
+        )
+               
+        with open(inpfile, "w") as outfile:
+            inpfile.write(inp)
+
+        return
+            
