@@ -1,1 +1,1 @@
-from .core import DataSet
+from .core import DataSet, FrameGeometry
