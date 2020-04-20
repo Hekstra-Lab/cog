@@ -285,7 +285,7 @@ class FrameGeometry():
         )
                
         with open(inpfile, "w") as outfile:
-            inpfile.write(inp)
+            outfile.write(inp)
 
         return
             
