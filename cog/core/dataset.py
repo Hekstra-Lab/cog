@@ -11,7 +11,7 @@ class DataSet():
     """
 
     def __init__(self, images, pathToImages, distance=None, center=None,
-                 pixelSize=(0.0886, 0.0886), cell=None, sg=None):
+                 pixelSize=(0.08854, 0.08854), cell=None, sg=None):
 
         # Set of images stored as a pd.DataFrame
         self.images = images
