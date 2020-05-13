@@ -61,7 +61,8 @@ class DataSet():
 
     def getCell(self):
         return (self.a, self.b, self.c, self.alpha, self.beta, self.gamma)
-    
+
+    @property
     def numImages(self):
         """
         Number of images in DataSet
@@ -71,7 +72,14 @@ class DataSet():
         int : Number of images
         """
         return len(self.images)
-        
+
+    def invertGoniometerRotation(self):
+        """
+        Invert rotation of goniometer for images in DataSet
+        """
+        self.images['phi'] *= -1
+        return
+    
     def toPickle(self, pklfile="DataSet.pkl"):
         with open(pklfile, 'wb') as pkl:
             pickle.dump(self, pkl, protocol=pickle.HIGHEST_PROTOCOL)
