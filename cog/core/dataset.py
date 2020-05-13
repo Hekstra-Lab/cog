@@ -161,7 +161,7 @@ class DataSet():
 
         return
 
-    def index(self, image, resolution=2.0, spot_profile=(10, 5, 2.0)):
+    def index(self, image, resolution=2.0, spot_profile=(6, 4, 4.0)):
         """
         Index image using Precognition
 
@@ -183,12 +183,41 @@ class DataSet():
         except KeyError:
             raise KeyError(f"{image} was not found in image DataFrame")
         
-        code, geom = index(imagepath, self.getCell(), self.sg,
-                           self.distance, self.center, phi, resolution,
-                           spot_profile)
+        geom = index(imagepath, self.getCell(), self.sg, self.distance,
+                     self.center, phi, resolution, spot_profile)
 
-        if not code:
+        if geom:
             self.images.loc[image, "geometry"] = geom
 
         return
 
+    def refine(self, image, resolution=2.0, spot_profile=(6, 4, 4.)):
+        """
+        Refine experimental geometry for image using Precognition
+
+        Parameters
+        ----------
+        image : str
+            Filename of image to select from DataSet.images
+        resolution : float
+            High-resolution limit in angstroms
+        spot_profile : tuple(length, width, sigma-cut)
+            Parameters to be used for spot recognition
+        """
+        from cog.commands import refine
+
+        try:
+            entry = self.images.loc[image]
+            phi = entry['phi']
+            geometry =  entry['geometry']
+        except KeyError:
+            raise KeyError(f"{image} was not found in image DataFrame")
+
+        rmsd, numMatched, geom = refine(image, phi, geometry,
+                                        self.pathToImages, resolution,
+                                        spot_profile)
+        self.images.loc[image,  "geometry"] = geom
+        self.images.loc[image, "rmsd"] = rmsd
+        self.images.loc[image, "matched"] = numMatched
+
+        return

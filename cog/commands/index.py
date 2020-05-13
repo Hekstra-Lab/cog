@@ -3,7 +3,7 @@ from cog import FrameGeometry
 from cog.core.precognition import run
 
 def index(image, cell=None, spacegroup=None, distance=None, center=None,
-          phi=0.0, resolution=2.0, spot_profile=(10, 5, 2.0),
+          phi=0.0, resolution=2.0, spot_profile=(6, 4, 4),
           inpfile="index.inp", logfile="index.log",
           outfile="spots.spt"):
     """
@@ -38,8 +38,6 @@ def index(image, cell=None, spacegroup=None, distance=None, center=None,
 
     Returns
     -------
-    returncode : int
-        0 for success; 1 for failure    
     geometry : cog.FrameGeometry
         Indexed experimental geometry for image (None if failed)
     """
@@ -90,19 +88,17 @@ def checkStatus(logfile):
 
     Returns
     -------
-    returncode : int
-        0 for success; 1 for failure
     geometry : cog.FrameGeometry
         Indexed experimental geometry for image (None if failed)
     """
     # Check if indexed geometry has been written
     if not os.path.exists(f"pre.spt.inp"):
-        return 1, None
+        return None
 
     # Check for error statement in logfile
     with open(logfile, "r") as log:
         lines = log.readlines()
     if [ True for l in lines if "Index: Auto-indexing failed!" in l ]:
-        return 1, None
+        return None
     
-    return 0, FrameGeometry("pre.spt.inp")
+    return FrameGeometry("pre.spt.inp")
