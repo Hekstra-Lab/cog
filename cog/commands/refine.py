@@ -50,7 +50,7 @@ def refine(image, phi, geometry, pathToImages, resolution=2.0,
                f"@initial.mccd.inp\n\n"
                f"Input\n"
                f"   Crystal    0.05 0.05 0.05 0.05 0.05 0.05 free\n"
-               f"   Distance   0.05\n"
+               f"   Distance   0.05 free\n"
                f"   Format     RayonixMX340\n"
                f"   Omega      0 0\n"
                f"   prompt off\n"
