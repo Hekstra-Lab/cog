@@ -1,5 +1,6 @@
 import argparse
-from cog.commands import softlimits, index
+from cog.commands import import_from_logs, softlimits, index
+
 
 def main():
 
@@ -9,6 +10,25 @@ def main():
                                        dest="cmd",
                                        required=True)
 
+    # Parser for import
+    parser_import = subparsers.add_parser("import",
+                                          help="Create DataSet object from BioCARS log files")
+    parser_import.add_argument("logs", nargs="+", help="Log files to import")
+    parser_import.add_argument("-d", "--distance", type=float,
+                               help=("Detector distance in mm. If not given, nominal distance will"
+                                     " be read from the log files"))
+    parser_import.add_argument("--center", type=float, nargs=2, metavar=("center_x", "center_y"),
+                               help="Coordinates of beam center in pixels")
+    parser_import.add_argument("--pixelsize", type=float, nargs=2, default=(0.08854, 0.08854),
+                               help="Pixel size of detector in mm")
+    parser_import.add_argument("-c", "--cell", help="Cell parameters for crystal",
+                               metavar=("a", "b", "c", "alpha", "beta", "gamma"),
+                               nargs=6, type=float)
+    parser_import.add_argument("--spacegroup", help="Space group number", type=int)
+    parser_import.add_argument("-o", "--output", help="Output file (.pkl)",
+                               default="dataset.pkl")
+    parser_import.set_defaults(cmd=import_from_logs)
+    
     # Parser for softlimits
     parser_softlimits = subparsers.add_parser("softlimits",
                                               help="Determine soft limits for data analysis")

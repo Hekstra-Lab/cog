@@ -50,6 +50,10 @@ class DataSet():
             
         return
             
+    def __repr__(self):
+        """String representation of DataSet instance"""
+        return f"<cog.DataSet with {self.numImages} frames>"
+
     def setCell(self, a, b, c, alpha, beta, gamma):
         self.a = a
         self.b = b
@@ -92,7 +96,8 @@ class DataSet():
         return ds
 
     @classmethod
-    def fromLogs(cls, logs, distance=None, center=None):
+    def fromLogs(cls, logs, distance=None, center=None, pixelSize=(0.08854, 0.08854),
+                 cell=None, sg=None):
         """
         Initialize DataSet from a list of log files from BioCARS.
 
@@ -103,8 +108,14 @@ class DataSet():
         distance : float
             Detector distance in mm. If not given, the nominal distance
             will be read from the log files
-        center : tuple of floats
+        center : tuple of floats (len of 2)
             Beam center in pixels
+        pixelSize : tuple of floats (len of 2)
+            Pixel size along fast- and slow-axis of detector in mm
+        cell : tuple of floats (len of 6)
+            Cell parameters of crystal
+        sg : int
+            Space group number
         """
         dists = []
         dfs   = []
@@ -125,15 +136,23 @@ class DataSet():
         
         # Adjust the DataFrame to remove extra columns
         df = pd.concat(dfs)
-        df = df[["#date time", "file", "delay", "Gon Single AX"]]
-        df.rename(columns={"#date time": "time", "Gon Single AX": "phi"},
+        if "Gon Single Ax" in df.columns:
+            df = df[["#date time", "file", "delay", "Gon Single AX"]]
+        elif "angle" in df.columns:
+            df = df[["#date time", "file", "delay", "angle"]]
+        else:
+            raise ValueError("Could not determine gonio angle field in log -- blame Jack")
+        df.rename(columns={"#date time": "time",
+                           "Gon Single AX": "phi",
+                           "angle": "phi"},
                   inplace=True)
+        
         df.reset_index(inplace=True, drop=True)
         df.loc[df["delay"] == "-", "delay"] = "off"
         df.set_index("file", inplace=True)
         
         return cls(images=df, pathToImages=pathToImages, distance=dist,
-                   center=center)
+                   center=center, pixelSize=pixelSize, cell=cell, sg=sg)
             
     def softlimits(self, image, resolution=2.0, spot_profile=(10, 5, 2.0)):
         """
