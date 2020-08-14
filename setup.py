@@ -10,7 +10,8 @@ setup(
     install_requires=[],
     entry_points={
         'console_scripts': [
-            'cog=cog.main:main'
+            'cog=cog.main:main',
+            'cog.up=cog.up:main'
         ]
     }
 )

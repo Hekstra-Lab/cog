@@ -15,164 +15,164 @@ class FrameGeometry():
 
     @property
     def crystal(self):
-        return self.__crystal
+        return self._crystal
 
     @property
     def a(self):
-        return self.__crystal[0]
+        return self._crystal[0]
 
     @property
     def b(self):
-        return self.__crystal[1]
+        return self._crystal[1]
 
     @property
     def c(self):
-        return self.__crystal[2]
+        return self._crystal[2]
 
     @property
     def alpha(self):
-        return self.__crystal[3]
+        return self._crystal[3]
 
     @property
     def beta(self):
-        return self.__crystal[4]
+        return self._crystal[4]
 
     @property
     def gamma(self):
-        return self.__crystal[5]
+        return self._crystal[5]
     
     @crystal.setter
     def crystal(self, values):
         if len(values) != 6:
             raise ValueError(f"Cell parameters must have 6 values")
         values = *map(float, values),
-        self.__crystal = values
+        self._crystal = values
         return
 
     @property
     def spacegroup(self):
-        return self.__spacegroup
+        return self._spacegroup
 
     @spacegroup.setter 
     def spacegroup(self, value):
-        self.__spacegroup = value
+        self._spacegroup = value
         return
 
     @property
     def matrix(self):
-        return self.__matrix
+        return self._matrix
 
     @matrix.setter
     def matrix(self, values):
-        self.__matrix = values
+        self._matrix = values
         return
 
     @property
     def omega(self):
-        return self.__omega
+        return self._omega
 
     @omega.setter
     def omega(self, values):
-        self.__omega = values
+        self._omega = values
         return
 
     @property
     def goniometer(self):
-        return self.__goniometer
+        return self._goniometer
 
     @goniometer.setter
     def goniometer(self, values):
-        self.__goniometer = values
+        self._goniometer = values
         return
 
     @property
     def imageformat(self):
-        return self.__imageformat
+        return self._imageformat
 
     @imageformat.setter
     def imageformat(self, value):
-        self.__imageformat = value
+        self._imageformat = value
         return
 
     @property
     def distance(self):
-        return self.__distance
+        return self._distance
 
     @distance.setter
     def distance(self, values):
-        self.__distance = values
+        self._distance = values
         return
 
     @property
     def center(self):
-        return self.__center
+        return self._center
 
     @center.setter
     def center(self, values):
-        self.__center = values
+        self._center = values
         return
 
     @property
     def pixel(self):
-        return self.__pixel
+        return self._pixel
 
     @pixel.setter
     def pixel(self, values):
-        self.__pixel = values
+        self._pixel = values
         return
 
     @property
     def swing(self):
-        return self.__swing
+        return self._swing
 
     @swing.setter
     def swing(self, values):
-        self.__swing = values
+        self._swing = values
         return
 
     @property
     def tilt(self):
-        return self.__tilt
+        return self._tilt
 
     @tilt.setter
     def tilt(self, values):
-        self.__tilt = values
+        self._tilt = values
         return
     
     @property
     def bulge(self):
-        return self.__bulge
+        return self._bulge
 
     @bulge.setter
     def bulge(self, values):
-        self.__bulge = values
+        self._bulge = values
         return
 
     @property
     def image(self):
-        return self.__image
+        return self._image
 
     @image.setter
     def image(self, value):
-        self.__image = value
+        self._image = value
         return
 
     @property
     def resolution(self):
-        return self.__resolution
+        return self._resolution
 
     @resolution.setter
     def resolution(self, values):
-        self.__resolution = values
+        self._resolution = values
         return
 
     @property
     def wavelength(self):
-        return self.__wavelength
+        return self._wavelength
 
     @wavelength.setter
     def wavelength(self, values):
-        self.__wavelength = values
+        self._wavelength = values
         return
 
     def readINPFile(self, inpfile):

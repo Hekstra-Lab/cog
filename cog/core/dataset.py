@@ -10,51 +10,139 @@ class DataSet():
     representing and analyzing Laue diffraction experiments.
     """
 
+    #-------------------------------------------------------------------#
+    # Constructor
+
     def __init__(self, images, pathToImages, distance=None, center=None,
-                 pixelSize=(0.08854, 0.08854), cell=None, sg=None):
+                 pixelSize=(0.08854, 0.08854), cell=None, spacegroup=None):
 
-        # Set of images stored as a pd.DataFrame
+        # Initialize attributes
         self.images = images
-
-        # Path to images
-        if isdir(pathToImages):
-            self.pathToImages = pathToImages
-        else:
-            raise ValueError(f"Path to images does not exist: {pathToImages}")
-
-        # Detector distance
+        self.pathToImages = pathToImages
         self.distance = distance
-
-        # Beam center (pixelX, pixelY)
-        if center and not isinstance(center, tuple):
-            raise ValueError("Beam center must be a tuple of floats")
-        else:
-            self.center = center
-
-        # Pixel size in (mm, mm)
-        if pixelSize and not isinstance(pixelSize, tuple):
-            raise ValueError("Pixel size must be a tuple of floats")
-        else:
-            self.pixelSize = pixelSize
-
-        # Cell parameters for crystal
-        if cell and (not isinstance(cell, tuple) or len(cell) != 6):
-            raise ValueError("Cell must be specified as (a, b, c, alpha, beta, gamma)")
-        elif cell:
-            self.setCell(*cell)
-        else:
-            self.setCell(*[None]*6)
-
-        # Space group for crystal
-        self.sg = sg
+        self.center = center
+        self.pixelSize = pixelSize
+        self.cell = cell
+        self.spacegroup = spacegroup
             
         return
             
+    #-------------------------------------------------------------------#
+    # Attributes
+
+    @property
+    def images(self):
+        """DataFrame containing images in DataSet and associated metadata"""
+        return self._images
+
+    @images.setter
+    def images(self, val):
+        if not isinstance(val, pd.DataFrame):
+            raise ValueError(f"DataSet.images should be set with a DataFrame")
+        self._images = val
+
+    @property
+    def pathToImages(self):
+        """Path to directory containing image files"""
+        return self._pathToImages
+
+    @pathToImages.setter
+    def pathToImages(self, val):
+        if not isdir(val):
+            raise ValueError(f"Path to images does not exist: {val}")
+        self._pathToImages = val
+
+    @property
+    def distance(self):
+        """Detector distance in mm"""
+        return self._distance
+
+    @distance.setter
+    def distance(self, val):
+        if val is None:
+            self._distance = None
+        else:
+            self._distance = float(val)
+
+    @property
+    def center(self):
+        """Beam center in pixels"""
+        return self._center
+
+    @center.setter
+    def center(self, val):
+        if val is None:
+            self._center = None
+        elif not isinstance(val, (tuple, list)):
+            raise ValueError("Beam center must be a tuple or list of floats")
+        elif len(val) != 2:
+            raise ValueError("Beam center must have len()==2")
+        else:
+            self._center = (float(val[0]), float(val[1]))
+
+    @property
+    def pixelSize(self):
+        """Pixel size in mm"""
+        return self._pixelSize
+
+    @pixelSize.setter
+    def pixelSize(self, val):
+        if val is None:
+            self._pixelSize = None
+        elif not isinstance(val, (tuple, list)):
+            raise ValueError("Pixel size must be a tuple or list of floats")
+        elif len(val) != 2:
+            raise ValueError("Pixel size must have len()==2")
+        else:
+            self._pixelSize = (float(val[0]), float(val[1]))
+
+    @property
+    def cell():
+        """
+        Unit cell parameters for crystal
+        """
+        return (self.a, self.b, self.c, self.alpha, self.beta, self.gamma)
+
+    @cell.setter
+    def cell(self, values):
+        if values is None:
+            self._setCell(*[None]*6)
+        elif not isinstance(values, (tuple, list)):
+            raise ValueError("cell must be a tuple or list of floats")
+        elif len(values) != 6:
+            raise ValueError("Cell must be specified as (a, b, c, alpha, beta, gamma)")
+        else:
+            self._setCell(*values)
+
+    @property
+    def spacegroup(self):
+        """
+        Spacegroup number (int)
+        """
+        return self._spacegroup
+
+    @spacegroup.setter
+    def spacegroup(self, val):
+        if val is None:
+            self._spacegroup = None
+        else:
+            self._spacegroup = int(val)
+            
+    @property
+    def numImages(self):
+        """
+        Number of images in DataSet
+        """
+        return len(self.images)
+
+    #----------------------------------------------------------------------#
+    # Methods
+    
     def __repr__(self):
         """String representation of DataSet instance"""
         return f"<cog.DataSet with {self.numImages} frames>"
 
-    def setCell(self, a, b, c, alpha, beta, gamma):
+    def _setCell(self, a, b, c, alpha, beta, gamma):
         self.a = a
         self.b = b
         self.c = c
@@ -62,20 +150,6 @@ class DataSet():
         self.beta  = beta
         self.gamma = gamma
         return
-
-    def getCell(self):
-        return (self.a, self.b, self.c, self.alpha, self.beta, self.gamma)
-
-    @property
-    def numImages(self):
-        """
-        Number of images in DataSet
-
-        Returns
-        -------
-        int : Number of images
-        """
-        return len(self.images)
 
     def invertGoniometerRotation(self):
         """
@@ -97,7 +171,7 @@ class DataSet():
 
     @classmethod
     def fromLogs(cls, logs, distance=None, center=None, pixelSize=(0.08854, 0.08854),
-                 cell=None, sg=None):
+                 cell=None, spacegroup=None):
         """
         Initialize DataSet from a list of log files from BioCARS.
 
@@ -114,7 +188,7 @@ class DataSet():
             Pixel size along fast- and slow-axis of detector in mm
         cell : tuple of floats (len of 6)
             Cell parameters of crystal
-        sg : int
+        spacegroup : int
             Space group number
         """
         dists = []
@@ -152,7 +226,7 @@ class DataSet():
         df.set_index("file", inplace=True)
         
         return cls(images=df, pathToImages=pathToImages, distance=dist,
-                   center=center, pixelSize=pixelSize, cell=cell, sg=sg)
+                   center=center, pixelSize=pixelSize, cell=cell, spacegroup=spacegroup)
             
     def softlimits(self, image, resolution=2.0, spot_profile=(10, 5, 2.0)):
         """
@@ -175,7 +249,7 @@ class DataSet():
         except KeyError:
             raise KeyError(f"{image} was not found in image DataFrame")
         
-        softlimits(imagepath, self.getCell(), self.sg, self.distance,
+        softlimits(imagepath, self.cell, self.spacegroup, self.distance,
                    self.center, resolution, spot_profile)
 
         return
@@ -202,7 +276,7 @@ class DataSet():
         except KeyError:
             raise KeyError(f"{image} was not found in image DataFrame")
         
-        geom = index(imagepath, self.getCell(), self.sg, self.distance,
+        geom = index(imagepath, self.cell, self.spacegroup, self.distance,
                      self.center, phi, resolution, spot_profile)
 
         if geom:
