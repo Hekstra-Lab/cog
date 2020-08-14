@@ -2,8 +2,6 @@
 """
 Plot the orientation of the crystal in the lab coordinate frame from a 
 Precognition geometry file.
-
-Note: This currently only works correctly for the vertical goniometer used in EF-X
 """
 
 import argparse
