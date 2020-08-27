@@ -10,3 +10,7 @@ commandline.
 I don't foresee this being useful outside of our research group at the moment, so I
 am hardcoding a few Odyssey-specific paths/features into this package. For now, that
 is the only place we have `Precognition` installed.
+
+## Installation Instructions
+
+@Jack -- write installation instructions here. Do it.
