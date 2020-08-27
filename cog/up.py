@@ -100,10 +100,8 @@ def main():
              [  1,  0,  0]]
         ) 
         A_star = precog2mosflm@(R@missetting@np.linalg.inv(O))
-        A = np.rot90(np.linalg.inv((A_star.T)), 3)
-        a = A[0, :]
-        b = A[1, :]
-        c = A[2, :]
+        A = np.linalg.inv(A_star)
+        a, b, c = A
 
         plotUnitCell(a, b, c, ax)
 
@@ -118,7 +116,7 @@ def main():
         print("----------------------------------------------")
         
     maxvec = np.linalg.norm(A, 2, 0).max()
-    ax.quiver(*[0, 0, -1.5*maxvec], *[0, 0, 3*maxvec], arrow_length_ratio=0.1, alpha=0.75, color="k", label="X-ray")
+    ax.quiver(*[0, 0, 1.5*maxvec], *[0, 0, -3*maxvec], arrow_length_ratio=0.1, alpha=0.75, color="k", label="X-ray")
     ax.quiver(*[0, 1.5*maxvec, 0], *[0, -3*maxvec, 0], arrow_length_ratio=0.1, alpha=0.75, color="y", label="EF")
 
     # Adjust axes
