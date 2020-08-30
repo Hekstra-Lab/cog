@@ -45,11 +45,8 @@ def angle(v1, v2):
     """Compute angle between two vectors"""
     return np.arccos(np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)))
 
-def get_unitcell_vectors(inp):
-    """
-    Get real-space unit cell vectors in the lab reference frame from a 
-    Precognition refined geometry file (*.mccd.inp)
-    """
+def get_Astar_matrix(inp):
+    """Get reciprocal A-matrix"""
     geometry = FrameGeometry(inp)
     cell = list(map(float, geometry.crystal))
     missetting = np.array(geometry.matrix, dtype=np.float).reshape(3, 3)
@@ -70,9 +67,21 @@ def get_unitcell_vectors(inp):
          [  1,  0,  0]]
     ) 
     A_star = precog2mosflm@(R@missetting@np.linalg.inv(O))
-    A = np.linalg.inv(A_star)
-    a, b, c = A
-    return a, b, c
+    return A_star
+
+def get_normal_vector(hkl, Astar):
+    """
+    Get normal vector to real-space Miller plane, hkl.
+
+    Note
+    ----
+        The normal vector to a real-space Miller plane is collinear with
+        the reciprocal dHKL vector. As such, we can use this simpler 
+        formula in the reciprocal lattice basis to get the correct 
+        orientation in real-space. For a graphical explanation of this,
+        please look at Rupp, p238.
+    """
+    return hkl@Astar.T
 
 def main():
 
@@ -81,10 +90,11 @@ def main():
                                      description=__doc__)
     parser.add_argument("inp", nargs="+",
                         help="Precognition geometry file (suffixed with .mccd.inp)")
+    parser.add_argument("--hmax", default=1, help="Maximal number to include in a Miller plane", type=int)
     args = parser.parse_args()
 
     # Relevant Miller planes
-    facets = list(itertools.product([-1, 0, 1], repeat=3))
+    facets = list(itertools.product(np.arange(-args.hmax, args.hmax+1), repeat=3))
     facets.remove((0, 0, 0))
 
     # Initialize results lists
@@ -94,10 +104,10 @@ def main():
     
     # Load geometry
     for inp in args.inp:
-        a, b, c = get_unitcell_vectors(inp)
+        Astar = get_Astar_matrix(inp)
         for facet in facets:
-            h, k, l = facet
-            normal = h*a + k*b + l*c
+            hkl = np.array(facet)
+            normal = get_normal_vector(hkl, Astar)
             theta = np.rad2deg(angle(normal, np.array([0, -1, 0])))
             l_facets.append(facet)
             l_images.append(inp)
