@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='cog',
-    version='0.3.0',
+    version='0.3.1',
     author='Jack B. Greisman',
     author_email='greisman@g.harvard.edu',
     packages=find_packages(),
