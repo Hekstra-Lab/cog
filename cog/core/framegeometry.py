@@ -1,4 +1,5 @@
 import os
+import numpy as np
 
 class FrameGeometry():
     """
@@ -8,11 +9,17 @@ class FrameGeometry():
     for reading and writing Precognition .inp geometry files. 
     """
 
+    #-------------------------------------------------------------------#
+    # Constructor
+    
     def __init__(self, inpfile):
         self.goniometer = None
         self.image = None
         self.readINPFile(inpfile)
 
+    #-------------------------------------------------------------------#
+    # Attributes
+        
     @property
     def crystal(self):
         return self._crystal
@@ -175,6 +182,9 @@ class FrameGeometry():
         self._wavelength = values
         return
 
+    #-------------------------------------------------------------------#
+    # I/O Methods
+    
     def readINPFile(self, inpfile):
         """
         Read Precognition .inp file and update geometric attributes
@@ -313,3 +323,85 @@ class FrameGeometry():
 
         return
             
+    #-------------------------------------------------------------------#
+    # Crystallographic Methods
+
+    def get_orthogonalization_matrix(self):
+        """
+        Compute real-space orthogonalization matrix from unit cell parameters.
+        """
+        a = float(self.a)
+        b = float(self.b)
+        c = float(self.c)
+        alpha = np.deg2rad(float(self.alpha))
+        beta = np.deg2rad(float(self.beta))
+        gamma = np.deg2rad(float(self.gamma))
+
+        # Compute unit cell volume
+        V = (a*b*c*np.sqrt(1 - np.cos(alpha)**2 -
+                           np.cos(beta)**2 -
+                           np.cos(gamma)**2 +
+                           2*np.cos(alpha)*np.cos(beta)*np.cos(gamma)))
+    
+        # Compute Cartesian orthogonalization matrix (Rupp, Page 746)
+        O = np.zeros((3, 3))
+        O[0, 0] = a
+        O[0, 1] = b*np.cos(gamma)
+        O[1, 1] = b*np.sin(gamma)
+        O[0, 2] = c*np.cos(beta)
+        O[1, 2] = c*(np.cos(alpha) - (np.cos(beta)*np.cos(gamma)))/np.sin(gamma)
+        O[2, 2] = V/(a*b*np.sin(gamma))
+
+        return O.T
+
+    def get_missetting_matrix(self):
+        """
+        Get missetting matrix for FrameGeometry
+        """
+        return np.array(self.matrix, dtype=np.float).reshape(3, 3)
+
+    def get_goniometer_rotation_matrix(self):
+        """
+        Get rotation matrix associated with goniometer settings of FrameGeometry
+        """
+        o1 = np.deg2rad(float(self.omega[0]))
+        o2 = np.deg2rad(float(self.omega[1]))    
+        gonio_phi = np.deg2rad(float(self.goniometer[2]))
+        
+        def get_rotation_matrix(axis, angle):
+            u = axis
+            sin,cos = np.sin(angle),np.cos(angle)
+            return cos*np.eye(3) + sin*np.cross(u, -np.eye(3)) + (1. - cos)*np.outer(u, u)
+
+        R = get_rotation_matrix(np.array([0., 0., -1.]),  o1)
+        R = get_rotation_matrix(np.array([0., 1., 0.]), o2)@R
+        R = get_rotation_matrix((R@np.array([0., 1., 0.])[:,None])[:,0], gonio_phi)@R
+        return R
+
+    def get_reciprocal_Amatrix(self):
+        """
+        Get A matrix in reciprocal lattice basis (A*)
+        """
+        O = self.get_orthogonalization_matrix()
+        missetting = self.get_missetting_matrix()
+        R = self.get_goniometer_rotation_matrix()
+        precog2mosflm = np.array(
+            [[  0,  0,  1],
+             [  0, -1,  0],
+             [  1,  0,  0]]
+        )
+        A_star = precog2mosflm@(R@missetting@np.linalg.inv(O))
+        return A_star
+
+    def get_realspace_Amatrix(self):
+        """
+        Get A matrix in realspace lattice basis (A)
+        """
+        return np.linalg.inv(self.get_reciprocal_Amatrix())
+
+    def get_realspace_unitcell_vectors(self):
+        """
+        Get unit cell vectors in realspace lattice basis (a, b, c)
+        """
+        a, b, c = self.get_realspace_Amatrix()
+        return a, b, c
