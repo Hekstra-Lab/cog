@@ -210,7 +210,7 @@ class DataSet():
         
         # Adjust the DataFrame to remove extra columns
         df = pd.concat(dfs)
-        if "Gon Single Ax" in df.columns:
+        if "Gon Single AX" in df.columns:
             df = df[["#date time", "file", "delay", "Gon Single AX"]]
         elif "angle" in df.columns:
             df = df[["#date time", "file", "delay", "angle"]]
