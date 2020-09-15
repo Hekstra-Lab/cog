@@ -13,7 +13,7 @@ def run(inpfile, logfile):
         File to which Precognition log will be written
     """
     # Paths
-    garden = "/n/holylfs/LABS/hekstra_lab/garden/"
+    garden = "/net/rcstorenfs02/ifs/rc_labs/hekstra_lab/garden"
     precognition = f"{garden}/precognition/Precognition_5.2_distrib"
 
     # Commands
