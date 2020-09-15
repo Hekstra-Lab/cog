@@ -314,3 +314,34 @@ class DataSet():
         self.images.loc[image, "matched"] = numMatched
 
         return
+
+    def calibrate(self, image, resolution=2.0, spot_profile=(6, 4, 4.)):
+        """
+        Calibrate experimental geometry for image using Precognition
+
+        Parameters
+        ----------
+        image : str
+            Filename of image to select from DataSet.images
+        resolution : float
+            High-resolution limit in angstroms
+        spot_profile : tuple(length, width, sigma-cut)
+            Parameters to be used for spot recognition
+        """
+        from cog.commands import calibrate
+
+        try:
+            entry = self.images.loc[image]
+            phi = entry['phi']
+            geometry =  entry['geometry']
+        except KeyError:
+            raise KeyError(f"{image} was not found in image DataFrame")
+
+        rmsd, numMatched, geom = calibrate(image, phi, geometry,
+                                           self.pathToImages, resolution,
+                                           spot_profile)
+        self.images.loc[image,  "geometry"] = geom
+        self.images.loc[image, "rmsd"] = rmsd
+        self.images.loc[image, "matched"] = numMatched
+
+        return
