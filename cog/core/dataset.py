@@ -97,7 +97,7 @@ class DataSet():
             self._pixelSize = (float(val[0]), float(val[1]))
 
     @property
-    def cell():
+    def cell(self):
         """
         Unit cell parameters for crystal
         """
