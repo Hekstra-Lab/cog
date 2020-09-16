@@ -57,7 +57,7 @@ def index(image, cell=None, spacegroup=None, distance=None, center=None,
                f"   Crystal    {cellformatted} {spacegroup}\n"
                f"   Distance   {distance:.3f}\n"
                f"   Center     {center[0]:.3f} {center[1]:.3f}\n"
-               f"   Pixel      0.0886 0.0886\n"
+               f"   Pixel      0.08854 0.08854\n"
                f"   Omega      0 0\n"
                f"   Goniometer 0 0 {phi}\n"
                f"   Format     RayonixMX340\n"
