@@ -13,9 +13,9 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'cog=cog.main:main',
             'cog.up=cog.up:main',
-            'cog.facet=cog.facet:main',            
+            'cog.facet=cog.facet:main',
+            'cog.load=cog.load:main',
         ]
     }
 )
