@@ -2,19 +2,28 @@ from os.path import isdir, abspath, dirname, join
 import pandas as pd
 import pickle
 
-class DataSet():
+
+class DataSet:
     """
     Laue crystallography dataset for processing in Precognition.
 
-    Provides a set of attributes and methods that can be used for 
+    Provides a set of attributes and methods that can be used for
     representing and analyzing Laue diffraction experiments.
     """
 
-    #-------------------------------------------------------------------#
+    # -------------------------------------------------------------------#
     # Constructor
 
-    def __init__(self, images, pathToImages, distance=None, center=None,
-                 pixelSize=(0.08854, 0.08854), cell=None, spacegroup=None):
+    def __init__(
+        self,
+        images,
+        pathToImages,
+        distance=None,
+        center=None,
+        pixelSize=(0.08854, 0.08854),
+        cell=None,
+        spacegroup=None,
+    ):
 
         # Initialize attributes
         self.images = images
@@ -24,10 +33,10 @@ class DataSet():
         self.pixelSize = pixelSize
         self.cell = cell
         self.spacegroup = spacegroup
-            
+
         return
-            
-    #-------------------------------------------------------------------#
+
+    # -------------------------------------------------------------------#
     # Attributes
 
     @property
@@ -106,7 +115,7 @@ class DataSet():
     @cell.setter
     def cell(self, values):
         if values is None:
-            self._setCell(*[None]*6)
+            self._setCell(*[None] * 6)
         elif not isinstance(values, (tuple, list)):
             raise ValueError("cell must be a tuple or list of floats")
         elif len(values) != 6:
@@ -127,7 +136,7 @@ class DataSet():
             self._spacegroup = None
         else:
             self._spacegroup = int(val)
-            
+
     @property
     def numImages(self):
         """
@@ -135,9 +144,9 @@ class DataSet():
         """
         return len(self.images)
 
-    #----------------------------------------------------------------------#
+    # ----------------------------------------------------------------------#
     # Methods
-    
+
     def __repr__(self):
         """String representation of DataSet instance"""
         return f"<cog.DataSet with {self.numImages} frames>"
@@ -147,7 +156,7 @@ class DataSet():
         self.b = b
         self.c = c
         self.alpha = alpha
-        self.beta  = beta
+        self.beta = beta
         self.gamma = gamma
         return
 
@@ -155,11 +164,11 @@ class DataSet():
         """
         Invert rotation of goniometer for images in DataSet
         """
-        self.images['phi'] *= -1
+        self.images["phi"] *= -1
         return
-    
+
     def toPickle(self, pklfile="DataSet.pkl"):
-        with open(pklfile, 'wb') as pkl:
+        with open(pklfile, "wb") as pkl:
             pickle.dump(self, pkl, protocol=pickle.HIGHEST_PROTOCOL)
         return
 
@@ -170,8 +179,15 @@ class DataSet():
         return ds
 
     @classmethod
-    def fromLogs(cls, logs, distance=None, center=None, pixelSize=(0.08854, 0.08854),
-                 cell=None, spacegroup=None):
+    def fromLogs(
+        cls,
+        logs,
+        distance=None,
+        center=None,
+        pixelSize=(0.08854, 0.08854),
+        cell=None,
+        spacegroup=None,
+    ):
         """
         Initialize DataSet from a list of log files from BioCARS.
 
@@ -192,11 +208,11 @@ class DataSet():
             Space group number
         """
         dists = []
-        dfs   = []
+        dfs = []
         pathToImages = abspath(dirname(logs[0]))
         for log in logs:
             with open(log, "r") as f:
-                lines18 = [ f.readline() for i in range(18) ]
+                lines18 = [f.readline() for i in range(18)]
                 dists.append(float(lines18[7].split()[3]))
                 dfs.append(pd.read_csv(f, delimiter="\t"))
 
@@ -207,7 +223,7 @@ class DataSet():
 
         if distance:
             dist = distance
-        
+
         # Adjust the DataFrame to remove extra columns
         df = pd.concat(dfs)
         if "Gon Single AX" in df.columns:
@@ -215,22 +231,31 @@ class DataSet():
         elif "angle" in df.columns:
             df = df[["#date time", "file", "delay", "angle"]]
         else:
-            raise ValueError("Could not determine gonio angle field in log -- blame Jack")
-        df.rename(columns={"#date time": "time",
-                           "Gon Single AX": "phi",
-                           "angle": "phi"},
-                  inplace=True)
-        
+            raise ValueError(
+                "Could not determine gonio angle field in log -- blame Jack"
+            )
+        df.rename(
+            columns={"#date time": "time", "Gon Single AX": "phi", "angle": "phi"},
+            inplace=True,
+        )
+
         df.reset_index(inplace=True, drop=True)
         df.loc[df["delay"] == "-", "delay"] = "off"
         df.set_index("file", inplace=True)
-        
-        return cls(images=df, pathToImages=pathToImages, distance=dist,
-                   center=center, pixelSize=pixelSize, cell=cell, spacegroup=spacegroup)
-            
+
+        return cls(
+            images=df,
+            pathToImages=pathToImages,
+            distance=dist,
+            center=center,
+            pixelSize=pixelSize,
+            cell=cell,
+            spacegroup=spacegroup,
+        )
+
     def softlimits(self, image, resolution=2.0, spot_profile=(10, 5, 2.0)):
         """
-        Determine the soft limits for data analysis in Precognition. 
+        Determine the soft limits for data analysis in Precognition.
 
         Parameters
         ----------
@@ -248,9 +273,16 @@ class DataSet():
             imagepath = join(self.pathToImages, image)
         except KeyError:
             raise KeyError(f"{image} was not found in image DataFrame")
-        
-        softlimits(imagepath, self.cell, self.spacegroup, self.distance,
-                   self.center, resolution, spot_profile)
+
+        softlimits(
+            imagepath,
+            self.cell,
+            self.spacegroup,
+            self.distance,
+            self.center,
+            resolution,
+            spot_profile,
+        )
 
         return
 
@@ -271,20 +303,30 @@ class DataSet():
 
         try:
             entry = self.images.loc[image]
-            phi = entry['phi']
+            phi = entry["phi"]
             imagepath = join(self.pathToImages, image)
         except KeyError:
             raise KeyError(f"{image} was not found in image DataFrame")
-        
-        geom = index(imagepath, self.cell, self.spacegroup, self.distance,
-                     self.center, phi, resolution, spot_profile)
+
+        geom = index(
+            imagepath,
+            self.cell,
+            self.spacegroup,
+            self.distance,
+            self.center,
+            phi,
+            resolution,
+            spot_profile,
+        )
 
         if geom:
             self.images.loc[image, "geometry"] = geom
 
         return
 
-    def refine(self, image, resolution=2.0, spot_profile=(6, 4, 4.)):
+    def refine(
+        self, image, initial_geometry=None, resolution=2.0, spot_profile=(6, 4, 4.0)
+    ):
         """
         Refine experimental geometry for image using Precognition
 
@@ -292,6 +334,9 @@ class DataSet():
         ----------
         image : str
             Filename of image to select from DataSet.images
+        initial_geometry : str
+            Filename of image to use for initial geometry from DataSet.images.
+            Defaults to using the same image
         resolution : float
             High-resolution limit in angstroms
         spot_profile : tuple(length, width, sigma-cut)
@@ -301,21 +346,24 @@ class DataSet():
 
         try:
             entry = self.images.loc[image]
-            phi = entry['phi']
-            geometry =  entry['geometry']
+            phi = entry["phi"]
+            if initial_geometry is None:
+                geometry = entry["geometry"]
+            else:
+                geometry = self.images.loc[initial_geometry, "geometry"]
         except KeyError:
             raise KeyError(f"{image} was not found in image DataFrame")
 
-        rmsd, numMatched, geom = refine(image, phi, geometry,
-                                        self.pathToImages, resolution,
-                                        spot_profile)
-        self.images.loc[image,  "geometry"] = geom
+        rmsd, numMatched, geom = refine(
+            image, phi, geometry, self.pathToImages, resolution, spot_profile
+        )
+        self.images.loc[image, "geometry"] = geom
         self.images.loc[image, "rmsd"] = rmsd
         self.images.loc[image, "matched"] = numMatched
 
         return
 
-    def calibrate(self, image, resolution=2.0, spot_profile=(6, 4, 4.)):
+    def calibrate(self, image, resolution=2.0, spot_profile=(6, 4, 4.0)):
         """
         Calibrate experimental geometry for image using Precognition
 
@@ -332,15 +380,15 @@ class DataSet():
 
         try:
             entry = self.images.loc[image]
-            phi = entry['phi']
-            geometry =  entry['geometry']
+            phi = entry["phi"]
+            geometry = entry["geometry"]
         except KeyError:
             raise KeyError(f"{image} was not found in image DataFrame")
 
-        rmsd, numMatched, geom = calibrate(image, phi, geometry,
-                                           self.pathToImages, resolution,
-                                           spot_profile)
-        self.images.loc[image,  "geometry"] = geom
+        rmsd, numMatched, geom = calibrate(
+            image, phi, geometry, self.pathToImages, resolution, spot_profile
+        )
+        self.images.loc[image, "geometry"] = geom
         self.images.loc[image, "rmsd"] = rmsd
         self.images.loc[image, "matched"] = numMatched
 
