@@ -115,7 +115,7 @@ def checkStatus(image, logfile):
         [True if ("Processing stops at {image}" in l) else False for l in lines]
     )
     if failed:
-        return (np.inf, 0, np.nan)
+        return (np.inf, 0, None)
 
     rmsdlines = [l for l in lines if "R.M.S.D" in l]
 
