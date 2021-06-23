@@ -361,7 +361,7 @@ class DataSet:
         self.images.loc[image, "rmsd"] = rmsd
         self.images.loc[image, "matched"] = numMatched
 
-        return
+        return rmsd
 
     def calibrate(self, image, resolution=2.0, spot_profile=(6, 4, 4.0)):
         """
