@@ -1,4 +1,5 @@
 import os
+import numpy as np
 from cog import FrameGeometry
 from cog.core.precognition import run
 
@@ -108,6 +109,13 @@ def checkStatus(image, logfile):
     # Check for error statement in logfile
     with open(logfile, "r") as log:
         lines = log.readlines()
+
+    # Check for failure
+    failed = any(
+        [True if ("Processing stops at {image}" in l) else False for l in lines]
+    )
+    if failed:
+        return (np.inf, 0, np.nan)
 
     rmsdlines = [l for l in lines if "R.M.S.D" in l]
 

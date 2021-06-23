@@ -2,9 +2,17 @@ import os
 from cog import FrameGeometry
 from cog.core.precognition import run
 
-def calibrate(image, phi, geometry, pathToImages, resolution=2.0,
-              spot_profile=(6, 4, 4), inpfile="calibrate.inp",
-              logfile="calibrate.log"):
+
+def calibrate(
+    image,
+    phi,
+    geometry,
+    pathToImages,
+    resolution=2.0,
+    spot_profile=(6, 4, 4),
+    inpfile="calibrate.inp",
+    logfile="calibrate.log",
+):
     """
     Calibrate experimental geometry for image using Precognition.
 
@@ -45,21 +53,22 @@ def calibrate(image, phi, geometry, pathToImages, resolution=2.0,
     geometry.writeINPFile(f"{image}.inp")
 
     # Write input file
-    inptext = (f"diagnostic    off\n"
-               f"busy          off\n\n"
-               f"@{image}.inp\n\n"
-               f"Input\n"
-               f"   Crystal    0.05 0.05 0.05 0.05 0.05 0.05 free\n"
-               f"   Distance   0.05 free\n"
-               f"   Format     RayonixMX340\n"
-               f"   Resolution {resolution} 100\n"
-               f"   Wavelength 1.02 1.18\n"
-               f"   Spot       {spot_profile[0]} {spot_profile[1]} {spot_profile[2]}\n"
-               f"   Quit\n"
-               f"Dataset       calibration\n"
-               f"   In	      {pathToImages}\n"
-               f"   Quit\n"
-               f"Quit\n"
+    inptext = (
+        f"diagnostic    off\n"
+        f"busy          off\n\n"
+        f"@{image}.inp\n\n"
+        f"Input\n"
+        f"   Crystal    0.05 0.05 0.05 0.05 0.05 0.05 free\n"
+        f"   Distance   0.05 free\n"
+        f"   Format     RayonixMX340\n"
+        f"   Resolution {resolution} 100\n"
+        f"   Wavelength 1.02 1.18\n"
+        f"   Spot       {spot_profile[0]} {spot_profile[1]} {spot_profile[2]}\n"
+        f"   Quit\n"
+        f"Dataset       calibration\n"
+        f"   In	      {pathToImages}\n"
+        f"   Quit\n"
+        f"Quit\n"
     )
     with open(inpfile, "w") as inp:
         inp.write(inptext)
@@ -67,11 +76,12 @@ def calibrate(image, phi, geometry, pathToImages, resolution=2.0,
     run(inpfile, logfile)
     return checkStatus(image, logfile)
 
+
 def checkStatus(image, logfile):
     """
-    Return status of geometry refinement. RMSDs and matched spots are 
+    Return status of geometry refinement. RMSDs and matched spots are
     determined by grepping for RMSD  lines in the logfile:
-    
+
     Example line:
     R.M.S.D. in pixel & matched spots:     0.52 508
 
@@ -93,14 +103,14 @@ def checkStatus(image, logfile):
     with open(logfile, "r") as log:
         lines = log.readlines()
 
-    rmsdlines = [ l for l in lines if "R.M.S.D" in l ]
+    rmsdlines = [l for l in lines if "R.M.S.D" in l]
     if len(rmsdlines) > 1:
-        raise NotImplementedError((f"Jack hasn't implemented parsing "
-                                   f"multiple RMSD entries yet..."))
+        raise NotImplementedError(
+            (f"Jack hasn't implemented parsing " f"multiple RMSD entries yet...")
+        )
     else:
         fields = rmsdlines[0].split()
         rmsd = float(fields[6])
         numMatched = int(fields[7])
-    
+
     return rmsd, numMatched, FrameGeometry(f"{image}.inp")
-    

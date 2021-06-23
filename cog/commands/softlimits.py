@@ -1,12 +1,21 @@
 import os
 from cog.core.precognition import run
 
-def softlimits(image=None, cell=None, spacegroup=None, distance=None,
-               center=None, resolution=2.0, spot_profile=(10, 5, 2.0),
-               inpfile="limits.inp", logfile="limits.log",
-               outfile="spots.spt"):
+
+def softlimits(
+    image=None,
+    cell=None,
+    spacegroup=None,
+    distance=None,
+    center=None,
+    resolution=2.0,
+    spot_profile=(10, 5, 2.0),
+    inpfile="limits.inp",
+    logfile="limits.log",
+    outfile="spots.spt",
+):
     """
-    Determine soft limits for data analsysis using Precognition's spot 
+    Determine soft limits for data analsysis using Precognition's spot
     profile and resolution estimates
 
     Parameters
@@ -42,29 +51,30 @@ def softlimits(image=None, cell=None, spacegroup=None, distance=None,
         raise ValueError("Please provide valid coordinates for the beam center")
 
     # Write input file
-    cellformatted = " ".join([ f"{d:.3f}" for d in cell ])
-    inptext = (f"diagnostic    off\n"
-               f"busy          off\n"
-               f"Input\n"
-               f"   Crystal    {cellformatted} {spacegroup}\n"
-               f"   Distance   {distance:.3f}\n"
-               f"   Center     {center[0]:.3f} {center[1]:.3f}\n"
-               f"   Pixel      0.0886 0.0886\n"
-               f"   Omega      0 0\n"
-               f"   Goniometer 0 0 0\n"
-               f"   Format     RayonixMX340\n"
-               f"   Image      {image}\n"
-               f"   Resolution {resolution:.2f} 100\n"
-               f"   Wavelength 1.02 1.16\n"
-               f"   Quit\n"
-               f"Spot {int(spot_profile[0])} {int(spot_profile[1])} {spot_profile[2]:.2f} {outfile}\n"
-               f"Profile\n"
-               f"Limits\n"
-               f"Quit\n"
+    cellformatted = " ".join([f"{d:.3f}" for d in cell])
+    inptext = (
+        f"diagnostic    off\n"
+        f"busy          off\n"
+        f"Input\n"
+        f"   Crystal    {cellformatted} {spacegroup}\n"
+        f"   Distance   {distance:.3f}\n"
+        f"   Center     {center[0]:.3f} {center[1]:.3f}\n"
+        f"   Pixel      0.0886 0.0886\n"
+        f"   Omega      0 0\n"
+        f"   Goniometer 0 0 0\n"
+        f"   Format     RayonixMX340\n"
+        f"   Image      {image}\n"
+        f"   Resolution {resolution:.2f} 100\n"
+        f"   Wavelength 1.02 1.16\n"
+        f"   Quit\n"
+        f"Spot {int(spot_profile[0])} {int(spot_profile[1])} {spot_profile[2]:.2f} {outfile}\n"
+        f"Profile\n"
+        f"Limits\n"
+        f"Quit\n"
     )
     with open(inpfile, "w") as inp:
         inp.write(inptext)
 
     run(inpfile, logfile)
-        
+
     return

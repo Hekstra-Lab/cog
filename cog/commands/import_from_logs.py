@@ -1,7 +1,15 @@
 from cog.core import DataSet
 
-def import_from_logs(logs=None, distance=None, center=None, pixelsize=None,
-                     cell=None, spacegroup=None, output=None):
+
+def import_from_logs(
+    logs=None,
+    distance=None,
+    center=None,
+    pixelsize=None,
+    cell=None,
+    spacegroup=None,
+    output=None,
+):
     """
     Create DataSet object from BioCARS log files and provided metadata.
 
@@ -24,7 +32,7 @@ def import_from_logs(logs=None, distance=None, center=None, pixelsize=None,
         Output file to which DataSet object will be written (.pkl file)
     """
     if not output.endswith(".pkl"):
-        raise  ValueError(f"Output suffix must be .pkl -- given: {output}")
+        raise ValueError(f"Output suffix must be .pkl -- given: {output}")
 
     dataset = DataSet.fromLogs(logs, distance, center, pixelsize, cell, spacegroup)
     dataset.toPickle(output)

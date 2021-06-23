@@ -1,25 +1,26 @@
 import os
 import numpy as np
 
-class FrameGeometry():
+
+class FrameGeometry:
     """
     Provides a representation of  per-frame geometry in Precognition.
 
     Includes attributes for accessing geometric parameters, and methods
-    for reading and writing Precognition .inp geometry files. 
+    for reading and writing Precognition .inp geometry files.
     """
 
-    #-------------------------------------------------------------------#
+    # -------------------------------------------------------------------#
     # Constructor
-    
+
     def __init__(self, inpfile):
         self.goniometer = None
         self.image = None
         self.readINPFile(inpfile)
 
-    #-------------------------------------------------------------------#
+    # -------------------------------------------------------------------#
     # Attributes
-        
+
     @property
     def crystal(self):
         return self._crystal
@@ -47,12 +48,12 @@ class FrameGeometry():
     @property
     def gamma(self):
         return self._crystal[5]
-    
+
     @crystal.setter
     def crystal(self, values):
         if len(values) != 6:
             raise ValueError(f"Cell parameters must have 6 values")
-        values = *map(float, values),
+        values = (*map(float, values),)
         self._crystal = values
         return
 
@@ -60,7 +61,7 @@ class FrameGeometry():
     def spacegroup(self):
         return self._spacegroup
 
-    @spacegroup.setter 
+    @spacegroup.setter
     def spacegroup(self, value):
         self._spacegroup = value
         return
@@ -145,7 +146,7 @@ class FrameGeometry():
     def tilt(self, values):
         self._tilt = values
         return
-    
+
     @property
     def bulge(self):
         return self._bulge
@@ -182,9 +183,9 @@ class FrameGeometry():
         self._wavelength = values
         return
 
-    #-------------------------------------------------------------------#
+    # -------------------------------------------------------------------#
     # I/O Methods
-    
+
     def readINPFile(self, inpfile):
         """
         Read Precognition .inp file and update geometric attributes
@@ -253,9 +254,9 @@ class FrameGeometry():
                 self.wavelength = values
             else:
                 raise ValueError(f"Unexpected key {key} in {inpfile}")
-                
+
         return
-                
+
     def writeINPFile(self, inpfile):
         """
         Write Precognition .inp file containing experimental geometry
@@ -266,64 +267,66 @@ class FrameGeometry():
             Path to .inp file to which to write
         """
 
-        line_crystal    = " ".join(map(str, self.crystal))
-        line_matrix     = " ".join(self.matrix)
-        line_omega      = " ".join(self.omega)
+        line_crystal = " ".join(map(str, self.crystal))
+        line_matrix = " ".join(self.matrix)
+        line_omega = " ".join(self.omega)
 
-        line_distance   = " ".join(self.distance)
-        line_center     = " ".join(self.center)
-        line_pixel      = " ".join(self.pixel)
-        line_swing      = " ".join(self.swing)
-        line_tilt       = " ".join(self.tilt)
-        line_bulge      = " ".join(self.bulge)
+        line_distance = " ".join(self.distance)
+        line_center = " ".join(self.center)
+        line_pixel = " ".join(self.pixel)
+        line_swing = " ".join(self.swing)
+        line_tilt = " ".join(self.tilt)
+        line_bulge = " ".join(self.bulge)
         line_resolution = " ".join(self.resolution)
         line_wavelength = " ".join(self.wavelength)
 
         if self.goniometer:
             line_goniometer = " ".join(self.goniometer)
-            
-            inp = (f"Input\n"
-                   f"   Crystal    {line_crystal} {self.spacegroup}\n"
-                   f"   Matrix     {line_matrix}\n"
-                   f"   Omega      {line_omega}\n"
-                   f"   Goniometer {line_goniometer}\n\n"
-                   f"   Format     {self.imageformat}\n"
-                   f"   Distance   {line_distance}\n"
-                   f"   Center     {line_center}\n"
-                   f"   Pixel      {line_pixel}\n"
-                   f"   Swing      {line_swing}\n"
-                   f"   Tilt       {line_tilt}\n"
-                   f"   Bulge      {line_bulge}\n\n"
-                   f"   Image {self.image[0]}    {self.image[1]}\n"
-                   f"   Resolution {line_resolution}\n"
-                   f"   Wavelength {line_wavelength}\n"
-                   f"   Quit\n"
+
+            inp = (
+                f"Input\n"
+                f"   Crystal    {line_crystal} {self.spacegroup}\n"
+                f"   Matrix     {line_matrix}\n"
+                f"   Omega      {line_omega}\n"
+                f"   Goniometer {line_goniometer}\n\n"
+                f"   Format     {self.imageformat}\n"
+                f"   Distance   {line_distance}\n"
+                f"   Center     {line_center}\n"
+                f"   Pixel      {line_pixel}\n"
+                f"   Swing      {line_swing}\n"
+                f"   Tilt       {line_tilt}\n"
+                f"   Bulge      {line_bulge}\n\n"
+                f"   Image {self.image[0]}    {self.image[1]}\n"
+                f"   Resolution {line_resolution}\n"
+                f"   Wavelength {line_wavelength}\n"
+                f"   Quit\n"
             )
 
         else:
 
-            inp = (f"Input\n"
-                   f"   Crystal    {line_crystal} {self.spacegroup}\n"
-                   f"   Matrix     {line_matrix}\n"
-                   f"   Omega      {line_omega}\n"
-                   f"   Format     {self.imageformat}\n"
-                   f"   Distance   {line_distance}\n"
-                   f"   Center     {line_center}\n"
-                   f"   Pixel      {line_pixel}\n"
-                   f"   Swing      {line_swing}\n"
-                   f"   Tilt       {line_tilt}\n"
-                   f"   Bulge      {line_bulge}\n\n"
-                   f"   Resolution {line_resolution}\n"
-                   f"   Wavelength {line_wavelength}\n"
-                   f"   Quit\n"
+            inp = (
+                f"Input\n"
+                f"   Crystal    {line_crystal} {self.spacegroup}\n"
+                f"   Matrix     {line_matrix}\n"
+                f"   Omega      {line_omega}\n"
+                f"   Format     {self.imageformat}\n"
+                f"   Distance   {line_distance}\n"
+                f"   Center     {line_center}\n"
+                f"   Pixel      {line_pixel}\n"
+                f"   Swing      {line_swing}\n"
+                f"   Tilt       {line_tilt}\n"
+                f"   Bulge      {line_bulge}\n\n"
+                f"   Resolution {line_resolution}\n"
+                f"   Wavelength {line_wavelength}\n"
+                f"   Quit\n"
             )
 
         with open(inpfile, "w") as outfile:
             outfile.write(inp)
 
         return
-            
-    #-------------------------------------------------------------------#
+
+    # -------------------------------------------------------------------#
     # Crystallographic Methods
 
     def get_orthogonalization_matrix(self):
@@ -338,19 +341,27 @@ class FrameGeometry():
         gamma = np.deg2rad(float(self.gamma))
 
         # Compute unit cell volume
-        V = (a*b*c*np.sqrt(1 - np.cos(alpha)**2 -
-                           np.cos(beta)**2 -
-                           np.cos(gamma)**2 +
-                           2*np.cos(alpha)*np.cos(beta)*np.cos(gamma)))
-    
+        V = (
+            a
+            * b
+            * c
+            * np.sqrt(
+                1
+                - np.cos(alpha) ** 2
+                - np.cos(beta) ** 2
+                - np.cos(gamma) ** 2
+                + 2 * np.cos(alpha) * np.cos(beta) * np.cos(gamma)
+            )
+        )
+
         # Compute Cartesian orthogonalization matrix (Rupp, Page 746)
         O = np.zeros((3, 3))
         O[0, 0] = a
-        O[0, 1] = b*np.cos(gamma)
-        O[1, 1] = b*np.sin(gamma)
-        O[0, 2] = c*np.cos(beta)
-        O[1, 2] = c*(np.cos(alpha) - (np.cos(beta)*np.cos(gamma)))/np.sin(gamma)
-        O[2, 2] = V/(a*b*np.sin(gamma))
+        O[0, 1] = b * np.cos(gamma)
+        O[1, 1] = b * np.sin(gamma)
+        O[0, 2] = c * np.cos(beta)
+        O[1, 2] = c * (np.cos(alpha) - (np.cos(beta) * np.cos(gamma))) / np.sin(gamma)
+        O[2, 2] = V / (a * b * np.sin(gamma))
 
         return O.T
 
@@ -365,17 +376,26 @@ class FrameGeometry():
         Get rotation matrix associated with goniometer settings of FrameGeometry
         """
         o1 = np.deg2rad(float(self.omega[0]))
-        o2 = np.deg2rad(float(self.omega[1]))    
+        o2 = np.deg2rad(float(self.omega[1]))
         gonio_phi = np.deg2rad(float(self.goniometer[2]))
-        
+
         def get_rotation_matrix(axis, angle):
             u = axis
-            sin,cos = np.sin(angle),np.cos(angle)
-            return cos*np.eye(3) + sin*np.cross(u, -np.eye(3)) + (1. - cos)*np.outer(u, u)
+            sin, cos = np.sin(angle), np.cos(angle)
+            return (
+                cos * np.eye(3)
+                + sin * np.cross(u, -np.eye(3))
+                + (1.0 - cos) * np.outer(u, u)
+            )
 
-        R = get_rotation_matrix(np.array([0., 0., -1.]),  o1)
-        R = get_rotation_matrix(np.array([0., 1., 0.]), o2)@R
-        R = get_rotation_matrix((R@np.array([0., 1., 0.])[:,None])[:,0], gonio_phi)@R
+        R = get_rotation_matrix(np.array([0.0, 0.0, -1.0]), o1)
+        R = get_rotation_matrix(np.array([0.0, 1.0, 0.0]), o2) @ R
+        R = (
+            get_rotation_matrix(
+                (R @ np.array([0.0, 1.0, 0.0])[:, None])[:, 0], gonio_phi
+            )
+            @ R
+        )
         return R
 
     def get_reciprocal_Amatrix(self):
@@ -385,12 +405,8 @@ class FrameGeometry():
         O = self.get_orthogonalization_matrix()
         missetting = self.get_missetting_matrix()
         R = self.get_goniometer_rotation_matrix()
-        precog2mosflm = np.array(
-            [[  0,  0,  1],
-             [  0, -1,  0],
-             [  1,  0,  0]]
-        )
-        A_star = precog2mosflm@(R@missetting@np.linalg.inv(O))
+        precog2mosflm = np.array([[0, 0, 1], [0, -1, 0], [1, 0, 0]])
+        A_star = precog2mosflm @ (R @ missetting @ np.linalg.inv(O))
         return A_star
 
     def get_realspace_Amatrix(self):

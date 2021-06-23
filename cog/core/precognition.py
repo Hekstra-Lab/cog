@@ -1,9 +1,10 @@
 import subprocess
 
+
 def run(inpfile, logfile):
     """
     Run Precognition using the given .inp file and writing all output to
-    the designated logfile. 
+    the designated logfile.
 
     Parameters
     ----------
@@ -18,8 +19,8 @@ def run(inpfile, logfile):
 
     # Commands
     setenv = f"source {precognition}/setup_precognition_env.sh"
-    mktmp  = f"license=$(mktemp /tmp/precoglicense.XXXXXX)"
-    cplic  = f"cp $RRILICENSE $license"
+    mktmp = f"license=$(mktemp /tmp/precoglicense.XXXXXX)"
+    cplic = f"cp $RRILICENSE $license"
     setlic = f"export RRILICENSE=$license"
     precog = f"Precognition_T5.2.2_x86_64 {inpfile} > {logfile}"
     cmd = f"{setenv}; {mktmp}; {cplic}; {setlic}; {precog}"
