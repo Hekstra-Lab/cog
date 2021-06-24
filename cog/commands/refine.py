@@ -112,7 +112,7 @@ def checkStatus(image, logfile):
 
     # Check for failure
     failed = any(
-        [True if ("Processing stops at {image}" in l) else False for l in lines]
+        [True if (f"Processing stops at {image}" in l) else False for l in lines]
     )
     if failed:
         return (np.inf, 0, None)
