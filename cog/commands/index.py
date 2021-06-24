@@ -112,6 +112,8 @@ def checkStatus(logfile):
     geometry : cog.FrameGeometry
         Indexed experimental geometry for image (None if failed)
     """
+    import glob
+
     # Check if indexed geometry has been written
     if not os.path.exists(f"pre.spt.inp"):
         return None
@@ -122,4 +124,17 @@ def checkStatus(logfile):
     if [True for l in lines if "Index: Auto-indexing failed!" in l]:
         return None
 
-    return FrameGeometry("pre.spt.inp")
+    # Determine geometry file with selected matrix
+    for i, l in enumerate(lines):
+        if "Selected matrix:" in l:
+            break
+
+    row1 = lines[i + 1].rstrip("\n").split(",")
+    row2 = lines[i + 2].rstrip("\n").split(",")
+    row3 = lines[i + 3].rstrip("\n").split(",")
+    matrix = row1.extend(row2).extend(row3)
+    files = sorted(glob.glob("*pre.spt.inp"))
+    geoms = [FrameGeometry(f) for f in files]
+    for f, g in zip(files, geoms):
+        if matrix == g.matrix:
+            return g
