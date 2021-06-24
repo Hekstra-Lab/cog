@@ -132,7 +132,7 @@ def checkStatus(logfile):
     row1 = lines[i + 1].rstrip("\n").split(",")
     row2 = lines[i + 2].rstrip("\n").split(",")
     row3 = lines[i + 3].rstrip("\n").split(",")
-    matrix = row1.extend(row2).extend(row3)
+    matrix = row1 + row2 + row3
     files = sorted(glob.glob("*pre.spt.inp"))
     geoms = [FrameGeometry(f) for f in files]
     for f, g in zip(files, geoms):
