@@ -133,6 +133,12 @@ def checkStatus(logfile):
     row2 = lines[i + 2].rstrip("\n").split(",")
     row3 = lines[i + 3].rstrip("\n").split(",")
     matrix = row1 + row2 + row3
-    geom = FrameGeometry("pre.spt.inp")
-    geom.matrix = matrix
-    return geom
+    m = np.array(matrix, dtype=float)
+    files = sorted(glob.glob("*pre.spt.inp"))
+    geoms = [FrameGeometry(f) for f in files]
+    for f, g in zip(files, geoms):
+        newmat = np.array(g.matrix, dtype=float)
+        if np.allclose(m, newmat, atol=1e-5):
+            return g
+
+    return FrameGeometry("pre.spt.inp")
