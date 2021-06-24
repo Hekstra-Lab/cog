@@ -113,6 +113,7 @@ def checkStatus(logfile):
         Indexed experimental geometry for image (None if failed)
     """
     import glob
+    import numpy as np
 
     # Check if indexed geometry has been written
     if not os.path.exists(f"pre.spt.inp"):
