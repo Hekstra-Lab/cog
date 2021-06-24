@@ -139,7 +139,7 @@ def checkStatus(logfile):
     geoms = [FrameGeometry(f) for f in files]
     for f, g in zip(files, geoms):
         newmat = np.array(g.matrix, dtype=float)
-        if np.allclose(m, newmat, atol=1e-5):
+        if np.allclose(m, newmat, atol=1e-4):
             return g
 
     return FrameGeometry("pre.spt.inp")
