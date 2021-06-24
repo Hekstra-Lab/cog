@@ -124,7 +124,7 @@ def checkStatus(logfile):
     if [True for l in lines if "Index: Auto-indexing failed!" in l]:
         return None
 
-    # Determine geometry file with selected matrix
+    # Replace Matrix in geometry file with selected one
     for i, l in enumerate(lines):
         if "Selected matrix:" in l:
             break
@@ -133,10 +133,6 @@ def checkStatus(logfile):
     row2 = lines[i + 2].rstrip("\n").split(",")
     row3 = lines[i + 3].rstrip("\n").split(",")
     matrix = row1 + row2 + row3
-    files = sorted(glob.glob("*pre.spt.inp"))
-    geoms = [FrameGeometry(f) for f in files]
-    for f, g in zip(files, geoms):
-        if matrix == g.matrix:
-            return g
-
-    return FrameGeometry("pre.spt.inp")
+    geom = FrameGeometry("pre.spt.inp")
+    geom.matrix = matrix
+    return geom
