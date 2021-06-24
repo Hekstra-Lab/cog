@@ -12,6 +12,7 @@ def index(
     phi=0.0,
     resolution=2.0,
     spot_profile=(6, 4, 4),
+    matrix=None,
     inpfile="index.inp",
     logfile="index.log",
     outfile="spots.spt",
@@ -39,6 +40,8 @@ def index(
         High-resolution limit in angstroms
     spot_profile : tuple(length, width, sigma-cut)
         Parameters to be used for spot recognition
+    matrix : list or tuple (len==9)
+        Missetting rotation matrix
     inpfile : filename
         File to which Precognition input will be written
     logfile : filename
@@ -59,6 +62,11 @@ def index(
     if (not center) or (len(center) != 2):
         raise ValueError("Please provide valid coordinates for the beam center")
 
+    if matrix is not None:
+        matrixline = f"   Matrix     {matrix[0]} {matrix[1]} {matrix[2]} {matrix[3]} {matrix[4]} {matrix[5]} {matrix[6]} {matrix[7]} {matrix[8]} {matrix[9]}\n"
+    else:
+        matrixline = ""
+
     # Write input file
     cellformatted = " ".join([f"{d:.3f}" for d in cell])
     inptext = (
@@ -72,6 +80,7 @@ def index(
         f"   Omega      0 0\n"
         f"   Goniometer 0 0 {phi}\n"
         f"   Format     RayonixMX340\n"
+        f"{matrixline}"
         f"   Image      {image}\n"
         f"   Resolution {resolution:.2f} 100\n"
         f"   Wavelength 1.02 1.16\n"

@@ -286,7 +286,9 @@ class DataSet:
 
         return
 
-    def index(self, image, resolution=2.0, spot_profile=(6, 4, 4.0)):
+    def index(
+        self, image, reference_geometry=None, resolution=2.0, spot_profile=(6, 4, 4.0)
+    ):
         """
         Index image using Precognition
 
@@ -294,6 +296,8 @@ class DataSet:
         ----------
         image : str
             Filename of image to select from DataSet.images DataFrame
+        reference_geometry : str
+            Filename of image to use for missetting matrix
         resolution : float
             High-resolution limit in angstroms
         spot_profile : tuple(length, width, sigma-cut)
@@ -305,6 +309,10 @@ class DataSet:
             entry = self.images.loc[image]
             phi = entry["phi"]
             imagepath = join(self.pathToImages, image)
+            if reference_geometry:
+                matrix = self.images.loc[reference_geometry, "geometry"].matrix
+            else:
+                matrix = None
         except KeyError:
             raise KeyError(f"{image} was not found in image DataFrame")
 
@@ -317,6 +325,7 @@ class DataSet:
             phi,
             resolution,
             spot_profile,
+            matrix=matrix,
         )
 
         if geom:
