@@ -138,3 +138,5 @@ def checkStatus(logfile):
     for f, g in zip(files, geoms):
         if matrix == g.matrix:
             return g
+
+    return FrameGeometry("pre.spt.inp")
