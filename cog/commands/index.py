@@ -142,4 +142,6 @@ def checkStatus(logfile):
         if np.allclose(m, newmat, atol=1e-4):
             return g
 
-    return FrameGeometry("pre.spt.inp")
+    g = FrameGeometry("pre.spt.inp")
+    g.matrix = matrix
+    return g
