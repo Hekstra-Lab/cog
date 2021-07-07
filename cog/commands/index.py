@@ -95,10 +95,14 @@ def index(
         inp.write(inptext)
 
     run(inpfile, logfile)
-    return checkStatus(logfile)
+
+    if matrix:
+        return checkStatus(logfile, matrix=True)
+
+    return checkStatus(logfile, matrix=False)
 
 
-def checkStatus(logfile):
+def checkStatus(logfile, matrix=False):
     """
     Return whether indexing has succeeded or failed.
 
@@ -124,6 +128,14 @@ def checkStatus(logfile):
         lines = log.readlines()
     if [True for l in lines if "Index: Auto-indexing failed!" in l]:
         return None
+
+    # Check if selected matrix is close to target
+    if matrix:
+        degree_line = [l for l in lines if "degrees away from the input matrix." in l]
+        degree_line = degree_line[0].split()
+        degrees = float(degree_line[3])
+        if degrees > 5.0:
+            return None
 
     # Replace Matrix in geometry file with selected one
     for i, l in enumerate(lines):
