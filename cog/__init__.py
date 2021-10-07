@@ -1,1 +1,1 @@
-from .core import DataSet, FrameGeometry
+from cog.core import Experiment, FrameGeometry
