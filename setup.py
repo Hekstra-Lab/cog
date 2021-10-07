@@ -5,7 +5,7 @@ tests_require = ["pytest", "pytest-xdist"]
 
 setup(
     name="cog",
-    version="0.4.0",
+    version="0.4.1",
     author="Jack B. Greisman",
     author_email="greisman@g.harvard.edu",
     packages=find_packages(),

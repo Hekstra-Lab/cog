@@ -3,9 +3,9 @@ import pandas as pd
 import pickle
 
 
-class DataSet:
+class Experiment:
     """
-    Laue crystallography dataset for processing in Precognition.
+    Laue crystallography experiment for processing in Precognition.
 
     Provides a set of attributes and methods that can be used for
     representing and analyzing Laue diffraction experiments.
@@ -41,13 +41,13 @@ class DataSet:
 
     @property
     def images(self):
-        """DataFrame containing images in DataSet and associated metadata"""
+        """DataFrame containing images in Experiment and associated metadata"""
         return self._images
 
     @images.setter
     def images(self, val):
         if not isinstance(val, pd.DataFrame):
-            raise ValueError(f"DataSet.images should be set with a DataFrame")
+            raise ValueError(f"Experiment.images should be set with a DataFrame")
         self._images = val
 
     @property
@@ -140,7 +140,7 @@ class DataSet:
     @property
     def numImages(self):
         """
-        Number of images in DataSet
+        Number of images in Experiment
         """
         return len(self.images)
 
@@ -148,8 +148,8 @@ class DataSet:
     # Methods
 
     def __repr__(self):
-        """String representation of DataSet instance"""
-        return f"<cog.DataSet with {self.numImages} frames>"
+        """String representation of Experiment instance"""
+        return f"<cog.Experiment with {self.numImages} frames>"
 
     def _setCell(self, a, b, c, alpha, beta, gamma):
         self.a = a
@@ -162,12 +162,12 @@ class DataSet:
 
     def invertGoniometerRotation(self):
         """
-        Invert rotation of goniometer for images in DataSet
+        Invert rotation of goniometer for images in Experiment
         """
         self.images["phi"] *= -1
         return
 
-    def toPickle(self, pklfile="DataSet.pkl"):
+    def toPickle(self, pklfile="experiment.pkl"):
         with open(pklfile, "wb") as pkl:
             pickle.dump(self, pkl, protocol=pickle.HIGHEST_PROTOCOL)
         return
@@ -189,12 +189,12 @@ class DataSet:
         spacegroup=None,
     ):
         """
-        Initialize DataSet from a list of log files from BioCARS.
+        Initialize Experiment from a list of log files from BioCARS.
 
         Parameters
         ----------
         logs : list of filepaths
-            List of log files to initialize DataSet
+            List of log files to initialize Experiment
         distance : float
             Detector distance in mm. If not given, the nominal distance
             will be read from the log files
@@ -260,7 +260,7 @@ class DataSet:
         Parameters
         ----------
         image : str
-            Filename of image to select from DataSet.images DataFrame
+            Filename of image to select from Experiment.images DataFrame
         resolution : float
             High-resolution limit in angstroms
         spot_profile : tuple(length, width, sigma-cut)
@@ -295,7 +295,7 @@ class DataSet:
         Parameters
         ----------
         image : str
-            Filename of image to select from DataSet.images DataFrame
+            Filename of image to select from Experiment.images DataFrame
         reference_geometry : str
             Filename of image to use for missetting matrix
         resolution : float
@@ -342,9 +342,9 @@ class DataSet:
         Parameters
         ----------
         image : str
-            Filename of image to select from DataSet.images
+            Filename of image to select from Experiment.images
         initial_geometry : str
-            Filename of image to use for initial geometry from DataSet.images.
+            Filename of image to use for initial geometry from Experiment.images.
             Defaults to using the same image
         resolution : float
             High-resolution limit in angstroms
@@ -379,7 +379,7 @@ class DataSet:
         Parameters
         ----------
         image : str
-            Filename of image to select from DataSet.images
+            Filename of image to select from Experiment.images
         resolution : float
             High-resolution limit in angstroms
         spot_profile : tuple(length, width, sigma-cut)

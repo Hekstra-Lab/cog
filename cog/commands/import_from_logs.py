@@ -1,4 +1,4 @@
-from cog.core import DataSet
+from cog.core import Experiment
 
 
 def import_from_logs(
@@ -11,12 +11,12 @@ def import_from_logs(
     output=None,
 ):
     """
-    Create DataSet object from BioCARS log files and provided metadata.
+    Create Experiment object from BioCARS log files and provided metadata.
 
     Parameters
     ----------
     logs : list of filepaths
-        List of log files to initialize DataSet
+        List of log files to initialize Experiment
     distance : float
         Detector distance in mm. If not given, the nominal distance
         will be read from the log files
@@ -29,11 +29,11 @@ def import_from_logs(
     spacegroup : int
         Space group number
     output : str
-        Output file to which DataSet object will be written (.pkl file)
+        Output file to which Experiment object will be written (.pkl file)
     """
     if not output.endswith(".pkl"):
         raise ValueError(f"Output suffix must be .pkl -- given: {output}")
 
-    dataset = DataSet.fromLogs(logs, distance, center, pixelsize, cell, spacegroup)
+    dataset = Experiment.fromLogs(logs, distance, center, pixelsize, cell, spacegroup)
     dataset.toPickle(output)
     return
