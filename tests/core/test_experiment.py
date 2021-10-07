@@ -1,11 +1,11 @@
 import pytest
 import pandas as pd
 
-from cog import DataSet
+from cog import Experiment
 
 def test_constructor_minimal():
-    """Test minimal DataSet constructor"""
-    ds = DataSet(pd.DataFrame(), "./")
+    """Test minimal Experiment constructor"""
+    ds = Experiment(pd.DataFrame(), "./")
 
     assert ds.distance is None
     assert ds.center is None
@@ -45,14 +45,14 @@ def test_constructor_minimal():
     1.0
 ])
 def test_constructor(images, pathToImages, distance, center, pixelSize, cell, spacegroup):
-    """Test DataSet constructor"""
-    ds = DataSet(images,
-                 pathToImages,
-                 distance=distance,
-                 center=center,
-                 pixelSize=pixelSize,
-                 cell=cell,
-                 spacegroup=spacegroup)
+    """Test Experiment constructor"""
+    ds = Experiment(images,
+                    pathToImages,
+                    distance=distance,
+                    center=center,
+                    pixelSize=pixelSize,
+                    cell=cell,
+                    spacegroup=spacegroup)
 
     if distance is None:
         assert ds.distance is None
