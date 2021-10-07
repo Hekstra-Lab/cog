@@ -1,4 +1,6 @@
 # cog
+[![Build](https://github.com/Hekstra-Lab/cog/actions/workflows/build.yml/badge.svg)](https://github.com/Hekstra-Lab/cog/actions/workflows/build.yml)  
+
 We are not yet `postcog`... but this is at least better than `precog`.
 
 This package is intended to serve as a lightweight Python wrapper for
