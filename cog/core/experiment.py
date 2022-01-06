@@ -179,6 +179,31 @@ class Experiment:
         return ds
 
     @classmethod
+    def fromDataSet(cls, dataset):
+        """
+        Initialize Experiment from a DataSet object. This function is only
+        here to maintain backwards compatibility with old versions of cog.
+
+        Parameters
+        ----------
+        dataset : cog.core.DataSet
+            DataSet object from cog (DEPRECATED)
+        """
+        from cog.core.dataset import DataSet
+
+        assert isinstance(dataset, DataSet)
+
+        return cls(
+            images=dataset.images,
+            pathToImages=dataset.pathToImages,
+            distance=dataset.distance,
+            center=dataset.center,
+            pixelSize=dataset.pixelSize,
+            cell=dataset.cell,
+            spacegroup=dataset.spacegroup,
+        )
+
+    @classmethod
     def fromLogs(
         cls,
         logs,
