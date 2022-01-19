@@ -15,4 +15,9 @@ is the only place we have `Precognition` installed.
 
 ## Installation Instructions
 
-@Jack -- write installation instructions here. Do it.
+```
+pip install git+https://github.com/Hekstra-Lab/cog.git
+```
+Note that because this repo is private (for now, and perhaps forever) you'll be asked to authenticate when you try to run the above. If you haven't already, you might need to [set up a GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
+
+## Main functions
