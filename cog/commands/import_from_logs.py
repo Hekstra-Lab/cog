@@ -1,6 +1,5 @@
 from cog.core import Experiment
 
-
 def import_from_logs(
     logs=None,
     distance=None,
