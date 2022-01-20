@@ -1,74 +1,57 @@
 # **cog** Module Overview
 
-short description
+A wrapper around `precognition`
 
 ## Classes
-* `Experiment`
-
-    ```
+### `Experiment`
+    
     
     Laue crystallography experiment for processing in Precognition.
 
     Provides a set of attributes and methods that can be used for
     representing and analyzing Laue diffraction experiments.
-    
-    ```
-
-  * `Experiment.images`
-
+        
+###Properties of Experiment 
+#### `Experiment.images`
       ```
       DataFrame containing images in Experiment and associated metadata
       ```
-
-  * `Experiment.pathToImages`
-
+#### `Experiment.pathToImages`
       ```
       Path to directory containing image files
       ```
-
-  * `Experiment.distance`
-
+#### `Experiment.distance`
       ```
       Detector distance in mm
       ```
-
-  * `Experiment.center`
-
+#### `Experiment.center`
       ```
       Beam center in pixels
       ```
-
-  * `Experiment.pixelSize`
-
+#### `Experiment.pixelSize`
       ```
       Pixel size in mm
       ```
-
-  * `Experiment.cell`
-
+#### `Experiment.cell`
       ```
       
         Unit cell parameters for crystal
         
       ```
-
-  * `Experiment.spacegroup`
-
+#### `Experiment.spacegroup`
       ```
       
         Spacegroup number (int)
         
       ```
-
-  * `Experiment.numImages`
-
+#### `Experiment.numImages`
       ```
       
         Number of images in Experiment
         
       ```
-
-  * `Experiment.invertGoniometerRotation`
+###Methods of Experiment 
+#### `Experiment.invertGoniometerRotation`
 
       ```
       
@@ -76,47 +59,9 @@ short description
         
       ```
 
-  * `Experiment.toPickle`
-  * `Experiment.fromPickle`
-  * `Experiment.fromDataSet`
-
-      ```
-      
-        Initialize Experiment from a DataSet object. This function is only
-        here to maintain backwards compatibility with old versions of cog.
-
-        Parameters
-        ----------
-        dataset : cog.core.DataSet
-            DataSet object from cog (DEPRECATED)
-        
-      ```
-
-  * `Experiment.fromLogs`
-
-      ```
-      
-        Initialize Experiment from a list of log files from BioCARS.
-
-        Parameters
-        ----------
-        logs : list of filepaths
-            List of log files to initialize Experiment
-        distance : float
-            Detector distance in mm. If not given, the nominal distance
-            will be read from the log files
-        center : tuple of floats (len of 2)
-            Beam center in pixels
-        pixelSize : tuple of floats (len of 2)
-            Pixel size along fast- and slow-axis of detector in mm
-        cell : tuple of floats (len of 6)
-            Cell parameters of crystal
-        spacegroup : int
-            Space group number
-        
-      ```
-
-  * `Experiment.softlimits`
+#### `Experiment.toPickle`
+#### `Experiment.fromPickle`
+#### `Experiment.softlimits`
 
       ```
       
@@ -133,7 +78,7 @@ short description
         
       ```
 
-  * `Experiment.index`
+#### `Experiment.index`
 
       ```
       
@@ -152,7 +97,7 @@ short description
         
       ```
 
-  * `Experiment.refine`
+#### `Experiment.refine`
 
       ```
       
@@ -172,7 +117,7 @@ short description
         
       ```
 
-  * `Experiment.calibrate`
+#### `Experiment.calibrate`
 
       ```
       
@@ -189,7 +134,6 @@ short description
         
       ```
 
-* `FrameGeometry`
 
 
 
