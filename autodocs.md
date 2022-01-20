@@ -11,60 +11,40 @@ A wrapper around `precognition`
     Provides a set of attributes and methods that can be used for
     representing and analyzing Laue diffraction experiments.
         
-###Properties of Experiment 
+### Properties of Experiment 
 #### `Experiment.images`
-      ```
-      DataFrame containing images in Experiment and associated metadata
-      ```
+  DataFrame containing images in Experiment and associated metadata 
 #### `Experiment.pathToImages`
-      ```
-      Path to directory containing image files
-      ```
+  Path to directory containing image files 
 #### `Experiment.distance`
-      ```
-      Detector distance in mm
-      ```
+  Detector distance in mm 
 #### `Experiment.center`
-      ```
-      Beam center in pixels
-      ```
+  Beam center in pixels 
 #### `Experiment.pixelSize`
-      ```
-      Pixel size in mm
-      ```
+  Pixel size in mm 
 #### `Experiment.cell`
-      ```
-      
+  
         Unit cell parameters for crystal
-        
-      ```
+         
 #### `Experiment.spacegroup`
-      ```
-      
+  
         Spacegroup number (int)
-        
-      ```
+         
 #### `Experiment.numImages`
-      ```
-      
+  
         Number of images in Experiment
-        
-      ```
-###Methods of Experiment 
+         
+### Methods of Experiment 
 #### `Experiment.invertGoniometerRotation`
 
-      ```
-      
+ 
         Invert rotation of goniometer for images in Experiment
-        
-      ```
-
+         
 #### `Experiment.toPickle`
 #### `Experiment.fromPickle`
 #### `Experiment.softlimits`
 
-      ```
-      
+ 
         Determine the soft limits for data analysis in Precognition.
 
         Parameters
@@ -75,13 +55,10 @@ A wrapper around `precognition`
             High-resolution limit in angstroms
         spot_profile : tuple(length, width, sigma-cut)
             Parameters to be used for spot recognition
-        
-      ```
-
+         
 #### `Experiment.index`
 
-      ```
-      
+ 
         Index image using Precognition
 
         Parameters
@@ -94,13 +71,10 @@ A wrapper around `precognition`
             High-resolution limit in angstroms
         spot_profile : tuple(length, width, sigma-cut)
             Parameters to be used for spot recognition
-        
-      ```
-
+         
 #### `Experiment.refine`
 
-      ```
-      
+ 
         Refine experimental geometry for image using Precognition
 
         Parameters
@@ -114,13 +88,10 @@ A wrapper around `precognition`
             High-resolution limit in angstroms
         spot_profile : tuple(length, width, sigma-cut)
             Parameters to be used for spot recognition
-        
-      ```
-
+         
 #### `Experiment.calibrate`
 
-      ```
-      
+ 
         Calibrate experimental geometry for image using Precognition
 
         Parameters
@@ -131,9 +102,7 @@ A wrapper around `precognition`
             High-resolution limit in angstroms
         spot_profile : tuple(length, width, sigma-cut)
             Parameters to be used for spot recognition
-        
-      ```
-
+         
 
 
 
