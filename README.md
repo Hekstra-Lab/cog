@@ -20,4 +20,5 @@ pip install git+https://github.com/Hekstra-Lab/cog.git
 ```
 Note that because this repo is private (for now, and perhaps forever) you'll be asked to authenticate when you try to run the above. If you haven't already, you might need to [set up a GitHub personal access token](https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token)
 
-## Main functions
+#### Quick note on this documentation
+I (Dennis) fell down a rabbit hole that led me to [this](https://github.com/Hekstra-Lab/cog/blob/documentation/autodocs.md), a cleaned-up version of the relevant docstrings from useful `cog` functions. I made this using [my lightly modified fork](https://github.com/dennisbrookner/doc2md) of [this repo](https://github.com/oiao/doc2md).
