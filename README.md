@@ -25,7 +25,19 @@ The [`cog.Experiment`](https://github.com/Hekstra-Lab/cog/blob/documentation/aut
 ```python
 from cog import Experiment
 ```
-The first thing you'll want to do is create an `Experiment`; the easiest way to do this is via the [`import_from_logs`](https://github.com/Hekstra-Lab/cog/blob/documentation/autodocs.md#import_from_logs) function, which pulls information out of a BioCARS log file. For example:
+The first thing you'll want to do is create an `Experiment`; the easiest way to do this is via the [`import_from_logs`](https://github.com/Hekstra-Lab/cog/blob/documentation/autodocs.md#import_from_logs) function, which pulls information out of a BioCARS log file. You can also specify parameters explicity. For example:
+
+```python
+beam_center = {your beam center}
+unit_cell = {your unit cell}
+sg = {your spacegroup}
+det_dist = {your detector distance}
+
+logs = sorted(glob.glob("*.log"))
+
+my_expt = 
+my_expt
+```
 
 
 #### Quick note on this documentation
