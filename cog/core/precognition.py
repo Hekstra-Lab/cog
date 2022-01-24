@@ -14,16 +14,13 @@ def run(inpfile, logfile):
         File to which Precognition log will be written
     """
     # Paths
-    garden = "/net/rcstorenfs02/ifs/rc_labs/hekstra_lab/garden"
+    garden = "/n/holylfs05/LABS/hekstra_lab/Lab/garden"
     precognition = f"{garden}/precognition/Precognition_5.2_distrib"
 
     # Commands
     setenv = f"source {precognition}/setup_precognition_env.sh"
-    mktmp = f"license=$(mktemp /tmp/precoglicense.XXXXXX)"
-    cplic = f"cp $RRILICENSE $license"
-    setlic = f"export RRILICENSE=$license"
     precog = f"Precognition_T5.2.2_x86_64 {inpfile} > {logfile}"
-    cmd = f"{setenv}; {mktmp}; {cplic}; {setlic}; {precog}"
+    cmd = f"{setenv}; {precog}"
 
     # Run command
     subprocess.call(cmd, shell=True)
