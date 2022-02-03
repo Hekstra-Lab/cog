@@ -235,37 +235,71 @@ class Experiment:
         dists = []
         dfs = []
         pathToImages = abspath(dirname(logs[0]))
+        oldFPGA = None
         for log in logs:
             with open(log, "r") as f:
-                lines18 = [f.readline() for i in range(18)]
-                dists.append(float(lines18[7].split()[3]))
-                dfs.append(pd.read_csv(f, delimiter="\t"))
+                line1 = f.readline()
 
-        if all(d == dists[0] for d in dists):
-            dist = dists[0]
+                # Handle old FPGA
+                if "Lauecollect" in line1:
+                    oldFPGA = True
+                    lines18 = [line1] + [f.readline() for i in range(17)]
+                    dists.append(float(lines18[7].split()[3]))
+                    dfs.append(pd.read_csv(f, delimiter="\t"))
+
+                # Handle new FPGA
+                elif "acquisition 5.10.4" in line1:
+                    oldFPGA = False
+                    lines2 = [line1, f.readline()]
+                    dfs.append(pd.read_csv(f, delimiter="\t"))
+
+                # Catch all other log files
+                else:
+                    raise ValueError(
+                        "I don't recognize this log file format -- blame Jack"
+                    )
+
+        # Only old FPGA has the nominal detector distance in the logs
+        if oldFPGA:
+            if all(d == dists[0] for d in dists):
+                dist = dists[0]
+            else:
+                raise ValueError("At least one log has a different detector distance!")
         else:
-            raise ValueError("At least one log has a different detector distance!")
+            dist = None
 
         if distance:
             dist = distance
 
         # Adjust the DataFrame to remove extra columns
         df = pd.concat(dfs)
-        if "Gon Single AX" in df.columns:
-            df = df[["#date time", "file", "delay", "Gon Single AX"]]
-        elif "angle" in df.columns:
-            df = df[["#date time", "file", "delay", "angle"]]
-        else:
-            raise ValueError(
-                "Could not determine gonio angle field in log -- blame Jack"
+        if oldFPGA:
+            if "Gon Single AX" in df.columns:
+                df = df[["#date time", "file", "delay", "Gon Single AX"]]
+            elif "angle" in df.columns:
+                df = df[["#date time", "file", "delay", "angle"]]
+            else:
+                raise ValueError(
+                    "Could not determine gonio angle field in log -- blame Jack"
+                )
+            df.rename(
+                columns={"#date time": "time", "Gon Single AX": "phi", "angle": "phi"},
+                inplace=True,
             )
-        df.rename(
-            columns={"#date time": "time", "Gon Single AX": "phi", "angle": "phi"},
-            inplace=True,
-        )
+            df.loc[df["delay"] == "-", "delay"] = "off"
+        else:
+            df = df[["#date time", "file", "Delay", "HuberPhi"]]
+            df.rename(
+                columns={"#date time": "time", "Delay": "delay", "HuberPhi": "phi"},
+                inplace=True,
+            )
+            df["delay"] *= 1e9  # convert to ns
+            df.loc[df["delay"].isna(), "delay"] = "off"
+            df["delay"] = df["delay"].apply(
+                lambda x: x if x == "off" else f"{int(x)}ns"
+            )
 
         df.reset_index(inplace=True, drop=True)
-        df.loc[df["delay"] == "-", "delay"] = "off"
         df.set_index("file", inplace=True)
 
         return cls(
