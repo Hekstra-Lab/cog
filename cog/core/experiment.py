@@ -248,7 +248,7 @@ class Experiment:
                     dfs.append(pd.read_csv(f, delimiter="\t"))
 
                 # Handle new FPGA
-                elif "acquisition 5.10.4" in line1:
+                elif ("acquisition 5.10.4" in line1) or ("acquisition 6.2.8" in line1):
                     oldFPGA = False
                     lines2 = [line1, f.readline()]
                     dfs.append(pd.read_csv(f, delimiter="\t"))
@@ -256,7 +256,7 @@ class Experiment:
                 # Catch all other log files
                 else:
                     raise ValueError(
-                        "I don't recognize this log file format -- blame Jack"
+                        "I don't recognize this log file format -- blame Jack and/or Dennis"
                     )
 
         # Only old FPGA has the nominal detector distance in the logs
