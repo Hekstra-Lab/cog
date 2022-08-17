@@ -55,7 +55,7 @@ coverage.xml
 *.pot
 
 # Django stuff:
-*.log
+#*.log Need .log files in the test suite!! They can be specifically excluded elsewhere if needed
 local_settings.py
 db.sqlite3
 
