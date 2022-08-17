@@ -9,10 +9,24 @@ provides a Python module that can be loaded in other Python scripts or IPython/J
 notebooks, as well as a convenience function, `cog`, that can be called from the
 commandline.
 
-I don't foresee this being useful outside of our research group at the moment, so I
-am hardcoding a few Odyssey-specific paths/features into this package. For now, that
-is the only place we have `Precognition` installed.
-
 ## Installation Instructions
 
-@Jack -- write installation instructions here. Do it.
+This is a pure python library that can be installed as:
+
+```shell
+# You will need to enter your login credentials/access token
+# because it's a private repo:
+git clone https://github.com/Hekstra-Lab/cog.git
+cd cog
+python -m pip install -e .
+```
+
+The `cog` library is intended to be used for processing BioCARS Laue data using
+precognition, so I see it most useful as a private repo for use in our group. This
+way we can avoid providing "general" support/features, and can tailor things more
+to our specific usage and context. Specifically, there are Odyssey paths/features
+hardcoded in to make things easy to use on the Harvard cluster. 
+
+This package can be installed locally so that you can read `Experiment` .pkl files
+for plotting, analysis, etc. However, you won't be able to run precognition data
+processing locally.
