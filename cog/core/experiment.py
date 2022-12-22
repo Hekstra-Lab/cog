@@ -212,6 +212,7 @@ class Experiment:
         pixelSize=(0.08854, 0.08854),
         cell=None,
         spacegroup=None,
+        acq_num=None,
     ):
         """
         Initialize Experiment from a list of log files from BioCARS.
@@ -231,6 +232,10 @@ class Experiment:
             Cell parameters of crystal
         spacegroup : int
             Space group number
+        acq_num : str
+            The "new FPGA" files are parsed for either "acquisition 5.10.4" or "acquisition 6.2.8".
+            If your log file contains "acquisition" + some different number, provide that number here.
+            Defaults to None.
         """
         dists = []
         dfs = []
@@ -248,15 +253,22 @@ class Experiment:
                     dfs.append(pd.read_csv(f, delimiter="\t"))
 
                 # Handle new FPGA
-                elif "acquisition 5.10.4" in line1:
+                elif ("acquisition 5.10.4" in line1) or ("acquisition 6.2.8" in line1):
                     oldFPGA = False
                     lines2 = [line1, f.readline()]
                     dfs.append(pd.read_csv(f, delimiter="\t"))
 
+                # Maybe this number will change again in the future? Adding support for that
+                elif acq_num is not None:
+                    if f"acquisition {acq_num}" in line1:
+                        oldFPGA = False
+                        lines2 = [line1, f.readline()]
+                        dfs.append(pd.read_csv(f, delimiter="\t"))
+
                 # Catch all other log files
                 else:
                     raise ValueError(
-                        "I don't recognize this log file format -- blame Jack"
+                        "I don't recognize this log file format -- blame Jack and/or Dennis"
                     )
 
         # Only old FPGA has the nominal detector distance in the logs
