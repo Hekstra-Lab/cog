@@ -14,13 +14,20 @@ commandline.
 This is a pure python library that can be installed as:
 
 ```shell
-# You will need to enter your login credentials/access token
-# because it's a private repo:
-git clone https://github.com/Hekstra-Lab/cog.git
-cd cog
-python -m pip install -e .
+pip install git+https://github.com/Hekstra-Lab/cog.git
 ```
 
+Note that this repo is private, so you'll need to enter your github credentials (unless they're already cached, which is fairly likely).
+
+### Development install
+If you'll be actively developing the `cog` source code, you should clone the repo and install in "editable" (`-e`) mode:
+```shell
+git clone https://github.com/Hekstra-Lab/cog.git
+cd cog
+pip install -e .
+```
+
+## Note about hard-coding
 The `cog` library is intended to be used for processing BioCARS Laue data using
 precognition, so I see it most useful as a private repo for use in our group. This
 way we can avoid providing "general" support/features, and can tailor things more
