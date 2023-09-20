@@ -9,6 +9,7 @@ def index(
     spacegroup=None,
     distance=None,
     center=None,
+    format="RayonixMX340",
     phi=0.0,
     resolution=2.0,
     spot_profile=(6, 4, 4),
@@ -34,6 +35,8 @@ def index(
         Detector distance in mm
     center : tuple(center_x, center_y)
         Coordinates of beam center in pixels
+    format  : string (optional)
+        Image format to use by Precognition 
     phi : float
         Phi angle of goniometer
     resolution : float
@@ -79,7 +82,7 @@ def index(
         f"   Pixel      0.08854 0.08854\n"
         f"   Omega      0 0\n"
         f"   Goniometer 0 0 {phi}\n"
-        f"   Format     RayonixMX340\n"
+        f"   Format     {format}\n"
         f"{matrixline}"
         f"   Image      {image}\n"
         f"   Resolution {resolution:.2f} 100\n"

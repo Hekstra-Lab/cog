@@ -23,6 +23,7 @@ class Experiment:
         pixelSize=(0.08854, 0.08854),
         cell=None,
         spacegroup=None,
+        format="RayonixMX340",
     ):
 
         # Initialize attributes
@@ -33,7 +34,7 @@ class Experiment:
         self.pixelSize = pixelSize
         self.cell = cell
         self.spacegroup = spacegroup
-
+        self.format = format
         return
 
     # -------------------------------------------------------------------#
@@ -143,6 +144,16 @@ class Experiment:
         Number of images in Experiment
         """
         return len(self.images)
+
+    @property
+    def format(self):
+        """Image format to use by Precognition"""
+        return self._format
+
+    @format.setter
+    def format(self, val):
+        self._format = val
+
 
     # ----------------------------------------------------------------------#
     # Methods
@@ -393,6 +404,7 @@ class Experiment:
             self.spacegroup,
             self.distance,
             self.center,
+            self.format,
             phi,
             resolution,
             spot_profile,
