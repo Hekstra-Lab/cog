@@ -8,6 +8,7 @@ def calibrate(
     phi,
     geometry,
     pathToImages,
+    format="RayonixMX340",
     resolution=2.0,
     spot_profile=(6, 4, 4),
     inpfile="calibrate.inp",
@@ -27,6 +28,8 @@ def calibrate(
         Experimental geometry from which to initialize refinement
     pathToImages : str
         Path to directory containing the MCCD images
+    format  : string (optional)
+        Image format to use by Precognition 
     resolution : float
         High-resolution limit in angstroms
     spot_profile : tuple(length, width, sigma-cut)
@@ -60,7 +63,7 @@ def calibrate(
         f"Input\n"
         f"   Crystal    0.05 0.05 0.05 0.05 0.05 0.05 free\n"
         f"   Distance   0.05 free\n"
-        f"   Format     RayonixMX340\n"
+        f"   Format     {format}\n"
         f"   Resolution {resolution} 100\n"
         f"   Wavelength 1.02 1.18\n"
         f"   Spot       {spot_profile[0]} {spot_profile[1]} {spot_profile[2]}\n"

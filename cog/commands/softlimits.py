@@ -8,6 +8,7 @@ def softlimits(
     spacegroup=None,
     distance=None,
     center=None,
+    format="RayonixMX340",
     resolution=2.0,
     spot_profile=(10, 5, 2.0),
     inpfile="limits.inp",
@@ -31,6 +32,8 @@ def softlimits(
         Detector distance in mm
     center : tuple(center_x, center_y)
         Coordinates of beam center in pixels
+    format  : string (optional)
+        Image format to use by Precognition 
     resolution : float
         High-resolution limit in angstroms
     spot_profile : tuple(length, width, sigma-cut)
@@ -62,7 +65,7 @@ def softlimits(
         f"   Pixel      0.0886 0.0886\n"
         f"   Omega      0 0\n"
         f"   Goniometer 0 0 0\n"
-        f"   Format     RayonixMX340\n"
+        f"   Format     {format}\n"
         f"   Image      {image}\n"
         f"   Resolution {resolution:.2f} 100\n"
         f"   Wavelength 1.02 1.16\n"

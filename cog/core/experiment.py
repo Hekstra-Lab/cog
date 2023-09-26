@@ -23,6 +23,7 @@ class Experiment:
         pixelSize=(0.08854, 0.08854),
         cell=None,
         spacegroup=None,
+        format="RayonixMX340",
     ):
 
         # Initialize attributes
@@ -33,7 +34,7 @@ class Experiment:
         self.pixelSize = pixelSize
         self.cell = cell
         self.spacegroup = spacegroup
-
+        self.format = format
         return
 
     # -------------------------------------------------------------------#
@@ -143,6 +144,16 @@ class Experiment:
         Number of images in Experiment
         """
         return len(self.images)
+
+    @property
+    def format(self):
+        """Image format to use by Precognition"""
+        return self._format
+
+    @format.setter
+    def format(self, val):
+        self._format = val
+
 
     # ----------------------------------------------------------------------#
     # Methods
@@ -351,6 +362,7 @@ class Experiment:
             self.spacegroup,
             self.distance,
             self.center,
+            self.format,
             resolution,
             spot_profile,
         )
@@ -393,6 +405,7 @@ class Experiment:
             self.spacegroup,
             self.distance,
             self.center,
+            self.format,
             phi,
             resolution,
             spot_profile,
@@ -435,7 +448,7 @@ class Experiment:
             raise KeyError(f"{image} was not found in image DataFrame")
 
         rmsd, numMatched, geom = refine(
-            image, phi, geometry, self.pathToImages, resolution, spot_profile
+            image, phi, geometry, self.pathToImages, self.format, resolution, spot_profile
         )
         self.images.loc[image, "geometry"] = geom
         self.images.loc[image, "rmsd"] = rmsd
@@ -466,7 +479,7 @@ class Experiment:
             raise KeyError(f"{image} was not found in image DataFrame")
 
         rmsd, numMatched, geom = calibrate(
-            image, phi, geometry, self.pathToImages, resolution, spot_profile
+            image, phi, geometry, self.pathToImages, self.format, resolution, spot_profile
         )
         self.images.loc[image, "geometry"] = geom
         self.images.loc[image, "rmsd"] = rmsd
