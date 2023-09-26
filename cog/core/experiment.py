@@ -362,6 +362,7 @@ class Experiment:
             self.spacegroup,
             self.distance,
             self.center,
+            self.format,
             resolution,
             spot_profile,
         )
@@ -447,7 +448,7 @@ class Experiment:
             raise KeyError(f"{image} was not found in image DataFrame")
 
         rmsd, numMatched, geom = refine(
-            image, phi, geometry, self.pathToImages, resolution, spot_profile
+            image, phi, geometry, self.pathToImages, self.format, resolution, spot_profile
         )
         self.images.loc[image, "geometry"] = geom
         self.images.loc[image, "rmsd"] = rmsd
@@ -478,7 +479,7 @@ class Experiment:
             raise KeyError(f"{image} was not found in image DataFrame")
 
         rmsd, numMatched, geom = calibrate(
-            image, phi, geometry, self.pathToImages, resolution, spot_profile
+            image, phi, geometry, self.pathToImages, self.format, resolution, spot_profile
         )
         self.images.loc[image, "geometry"] = geom
         self.images.loc[image, "rmsd"] = rmsd

@@ -9,6 +9,7 @@ def refine(
     phi,
     geometry,
     pathToImages,
+    format="RayonixMX340",
     resolution=2.0,
     spot_profile=(6, 4, 4),
     inpfile="refine.inp",
@@ -28,6 +29,8 @@ def refine(
         Experimental geometry from which to initialize refinement
     pathToImages : str
         Path to directory containing the MCCD images
+    format  : string (optional)
+        Image format to use by Precognition 
     resolution : float
         High-resolution limit in angstroms
     spot_profile : tuple(length, width, sigma-cut)
@@ -61,7 +64,7 @@ def refine(
         f"Input\n"
         f"   Crystal    0.05 0.05 0.05 0.05 0.05 0.05 free\n"
         f"   Distance   0.05 free\n"
-        f"   Format     RayonixMX340\n"
+        f"   Format     {format}\n"
         f"   Omega      0 0\n"
         f"   prompt off\n"
         f"   result off\n\n"
