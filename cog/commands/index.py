@@ -88,7 +88,7 @@ def index(
         f"   Quit\n"
         f"Spot          {spot_profile[2]:.2f} {outfile}\n"
         f"Ellipse       ellipses.spt\n"
-        f"Pattern       0 pre.spt\n"
+        f"Pattern       10 pre.spt\n"
         f"Quit\n"
     )
     with open(inpfile, "w") as inp:

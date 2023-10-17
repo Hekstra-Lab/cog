@@ -285,17 +285,24 @@ class Experiment:
 
         # Adjust the DataFrame to remove extra columns
         df = pd.concat(dfs)
+
         if oldFPGA:
             if "Gon Single AX" in df.columns:
-                df = df[["#date time", "file", "delay", "Gon Single AX"]]
+                df = df[["#date time", "file", "delay", "Gon Single AX","bunch-current[mA]"]]
             elif "angle" in df.columns:
-                df = df[["#date time", "file", "delay", "angle"]]
+                df = df[["#date time", "file", "delay", "angle","bunch-current[mA]"]]
+            elif "Huber Phi" in df.columns:
+                df = df[["#date time", "file", "delay", "Huber Phi","bunch-current[mA]"]]
             else:
                 raise ValueError(
                     "Could not determine gonio angle field in log -- blame Jack"
                 )
             df.rename(
-                columns={"#date time": "time", "Gon Single AX": "phi", "angle": "phi"},
+                columns={"#date time": "time", 
+                         "Gon Single AX": "phi", 
+                         "Huber Phi": "phi", 
+                         "angle": "phi", 
+                        "bunch-current[mA]":"bunch_current"},
                 inplace=True,
             )
             df.loc[df["delay"] == "-", "delay"] = "off"
