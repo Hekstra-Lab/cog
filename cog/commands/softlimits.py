@@ -65,7 +65,7 @@ def softlimits(
         f"   Format     RayonixMX340\n"
         f"   Image      {image}\n"
         f"   Resolution {resolution:.2f} 100\n"
-        f"   Wavelength 1.02 1.16\n"
+        f"   Wavelength 1.00 1.13\n" #new BioCARS spectrum 20250419
         f"   Quit\n"
         f"Spot {int(spot_profile[0])} {int(spot_profile[1])} {spot_profile[2]:.2f} {outfile}\n"
         f"Profile\n"

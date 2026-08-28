@@ -83,7 +83,7 @@ def index(
         f"{matrixline}"
         f"   Image      {image}\n"
         f"   Resolution {resolution:.2f} 100\n"
-        f"   Wavelength 1.02 1.16\n"
+        f"   Wavelength 1.00 1.13\n" # new BioCARS spectrum 20250419
         f"   Spot       {int(spot_profile[0])} {int(spot_profile[1])}\n"
         f"   Quit\n"
         f"Spot          {spot_profile[2]:.2f} {outfile}\n"

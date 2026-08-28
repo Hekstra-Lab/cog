@@ -1,8 +1,15 @@
 from os.path import isdir, abspath, dirname, join
 import pandas as pd
 import pickle
+import re
 
-
+def get_delay_from_img_new_FPGA(img):
+    a = re.split("_|\,",img)
+    out = a[-3]
+    if a[-2][0] == "-":
+        out = "201ns"
+    return out
+        
 class Experiment:
     """
     Laue crystallography experiment for processing in Precognition.
@@ -236,20 +243,22 @@ class Experiment:
             The "new FPGA" files are parsed for either "acquisition 5.10.4" or "acquisition 6.2.8".
             If your log file contains "acquisition" + some different number, provide that number here.
             Defaults to None.
+
+        finally, there are NEW NEW FPGA files with current header: acquisition_logfile_driver. 
         """
         dists = []
         dfs = []
         pathToImages = abspath(dirname(logs[0]))
         oldFPGA = None
+        newx2FPGA = None
         for log in logs:
             with open(log, "r") as f:
                 line1 = f.readline()
-
                 # Handle old FPGA
                 if "Lauecollect" in line1:
                     oldFPGA = True
-                    lines18 = [line1] + [f.readline() for i in range(17)]
-                    dists.append(float(lines18[7].split()[3]))
+                    lines18 = [line1] + [f.readline() for i in range(16)]
+                    dists.append(float(lines18[6].split()[3]))
                     dfs.append(pd.read_csv(f, delimiter="\t"))
 
                 # Handle new FPGA
@@ -264,6 +273,16 @@ class Experiment:
                         oldFPGA = False
                         lines2 = [line1, f.readline()]
                         dfs.append(pd.read_csv(f, delimiter="\t"))
+
+                #handle new new FPGA (as of 202504). The log format keeps changing because we keep requesting features from Friedrich Schotte, but hopefully it will stabilize soon.
+                elif ("acquisition_logfile_driver" in line1):
+                    oldFPGA = False
+                    newx2FPGA = True
+                    line2 = f.readline()
+                    line3 = f.readline() #period
+                    line4 = f.readline() #det distance
+                    lines2 = [line1, line2, line3, line4, f.readline()]
+                    dfs.append(pd.read_csv(f, delim_whitespace=True))# sep=r'[\t| ]', engine='python'))#delimiter="\t"))
 
                 # Catch all other log files
                 else:
@@ -285,7 +304,6 @@ class Experiment:
 
         # Adjust the DataFrame to remove extra columns
         df = pd.concat(dfs)
-
         if oldFPGA:
             if "Gon Single AX" in df.columns:
                 df = df[["#date time", "file", "delay", "Gon Single AX","bunch-current[mA]"]]
@@ -306,8 +324,19 @@ class Experiment:
                 inplace=True,
             )
             df.loc[df["delay"] == "-", "delay"] = "off"
+        elif newx2FPGA:
+            if "Phi" in df.columns: 
+                df = df[["#date", "time", "file", "Pulse_Generator", "Phi"]]
+                df["delay"] = df["file"].apply(get_delay_from_img_new_FPGA)
+            df.rename(
+                columns={"#date time": "time", "Phi": "phi"},
+                inplace=True,
+            )
+            df["file"] = df["file"]+".mccd"
+            
         else:
-            df = df[["#date time", "file", "Delay", "HuberPhi"]]
+            if "HuberPhi" in df.columns: 
+                df = df[["#date time", "file", "Delay", "HuberPhi"]]
             df.rename(
                 columns={"#date time": "time", "Delay": "delay", "HuberPhi": "phi"},
                 inplace=True,
@@ -330,7 +359,7 @@ class Experiment:
             cell=cell,
             spacegroup=spacegroup,
         )
-
+        
     def softlimits(self, image, resolution=2.0, spot_profile=(10, 5, 2.0)):
         """
         Determine the soft limits for data analysis in Precognition.

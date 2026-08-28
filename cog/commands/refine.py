@@ -69,7 +69,7 @@ def refine(
         f"   prompt on\n"
         f"   result on\n"
         f"   Resolution {resolution} 100\n"
-        f"   Wavelength 1.02 1.18\n"
+        f"   Wavelength 1.00 1.13\n" #new BioCARS spectrum 20250419
         f"   Spot       {spot_profile[0]} {spot_profile[1]} {spot_profile[2]}\n"
         f"   Quit\n"
         f"Dataset       progressive\n"
@@ -112,7 +112,7 @@ def checkStatus(image, logfile):
 
     # Check for failure
     failed = any(
-        [True if (f"Processing stops at {image}" in l) else False for l in lines]
+        [True if (f"Processing stops at" in l) else False for l in lines]
     )
     if failed:
         return (np.inf, 0, None)
